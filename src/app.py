@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-
+from flask import Flask, render_template, request
+from tes import findnumber
 app = Flask(__name__)
 @app.route('/')
 def main():
@@ -9,7 +9,25 @@ def main():
 @app.route('/about')
 def about():
     message = "About!"
-    return render_template('about.html',message=message)
+    angka = findnumber(31233)
+    return render_template('about.html',message=message ,angka=angka) 
+
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        uploaded_file = request.files['file']
+        if uploaded_file:
+            file_path = f"uploads/{uploaded_file.filename}"
+            uploaded_file.save(file_path)
+            messageunggah = "Berhasil diunggah!"
+            return render_template('main.html',unggah=messageunggah) 
+
+    return render_template('main.html')
+
+    
+
 
 if __name__ == '__main__':
     app.run()
+
+
