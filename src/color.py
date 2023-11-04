@@ -41,10 +41,56 @@ def convert_rgb_to_hsv(image):
     hsv=np.transpose([h, s, v], (1, 2, 0))
     return hsv
 
+#ini rumus dari referensi, diquantify dulu -> pakai euclidean distance bukan cosine similarity
+def quantify(hsv):
+    h=hsv[:,:,0]
+    s=hsv[:,:,1]
+    v=hsv[:,:,2]
+    width=len(h)
+    height=len(h[0])
+    for i in range(width):
+        for j in range(height):
+            if (h[i][j]>=316):
+                h[i][j]=0
+            elif (h[i][j]>=1 and h[i][j] <=25):
+                h[i][j]=1
+            elif (h[i][j]<=40):
+                h[i][j]=2
+            elif (h[i][j]<=120):
+                h[i][j]=3
+            elif (h[i][j]<=190):
+                h[i][j]=4
+            elif (h[i][j]<=270):
+                h[i][j]=5
+            elif (h[i][j]<=295):
+                h[i][j]=6
+            elif (h[i][j]<=315):
+                h[i][j]=7
+            if (s[i][j]<0.2):
+                s[i][j]=0
+            elif (s[i][j]<0.7):
+                s[i][j]=1
+            else:
+                s[i][j]=2
+            if (v[i][j]<0.2):
+                v[i][j]=0
+            elif (v[i][j]<0.7):
+                v[i][j]=1
+            else:
+                v[i][j]=2
+    quantified_hsv = np.transpose([h, s, v], (1, 2, 0))
+    return quantified_hsv
+
+#euclidean distance untuk rumus dari referensi
+def euclid_distance(vector1,vector2):
+    distance = np.sum((vector1-vector2)**2)
+    return distance
+
+#ini metode yang ada di spesifikasi
 def cosine_similarity(vector1, vector2):
     dot_product = np.dot(vector1, vector2)
-    len_vector1 = math.sqrt(np.sum((vector1)**2))
-    len_vector2 = math.sqrt(np.sum((vector2)**2))
+    len_vector1 = np.sqrt(np.sum((vector1)**2))
+    len_vector2 = np.sqrt(np.sum((vector2)**2))
     similarity = dot_product / (len_vector1 * len_vector2)
     return similarity
 
@@ -61,27 +107,37 @@ def pencarian_blok(query,database):
             block_database = database[i:i+block_size, j:j+block_size]
             vector_query=block_query.flatten()
             vector_db=block_database.flatten()
+            #Reference method
+            #similarity=euclid_distance(vector_db,vector_query)
+            #metode ori
             similarity=cosine_similarity(vector_db,vector_query)
             similarities.append(similarity)
     similarities=np.array(similarities)
 
     average_similarity = np.mean(similarities)
+    
+    #Kalau metode ori perlu diconvert ke persen
     similarity_percentage = (average_similarity)*100
+    
+    #Metode referensi langsung aja
+    #similarity_percentage = 100-average_similarity
+
     return similarity_percentage
 
 
 
 def color_based_image_retrieval(query_image, database_images):
     query_image = convert_rgb_to_hsv(query_image)
+    #query_image = quantify(query_image)
 
     matches = []
 
     for image in database_images:
         db_image = convert_rgb_to_hsv(image)
-
+        #db_image = quantify(db_image)
         similarity = pencarian_blok(query_image,db_image)
-        if (similarity>=60):
-            matches.append((image, similarity))
+        #if (similarity>=60):
+        matches.append((image, similarity))
 
     # Mengurutkan citra berdasarkan tingkat kesamaan
     matches.sort(key=lambda x: x[1], reverse=True)
@@ -94,6 +150,7 @@ if __name__ == "__main__":
 
     # Database
     database_images = [
+        cv2.imread("7.jpg"),
         cv2.imread("8.jpg"),
         cv2.imread("9.jpg"),
         cv2.imread("tes.jpg"),
@@ -107,8 +164,6 @@ if __name__ == "__main__":
     cv2.imshow("Query image", query_image)
     for i, (image, similarity) in enumerate(result):
         cv2.imshow(f"Match {i + 1} - Similarity: {similarity:.2f}%", image)
-        hsv=convert_rgb_to_hsv(image)
-        cv2.imshow(f"Match {i + 1} - Similarity: {similarity:.2f}%", hsv)
 
 
     cv2.waitKey(0)
