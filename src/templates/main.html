@@ -7,7 +7,7 @@
     <!-- Latest compiled and minified Bootstrap CSS -->
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
 </head>
-<body>
+<body style="background-color: #ffffff;">
     <header>
         <h1>
             TUGAS BESAR ALJABAR LINEAR DAN GEOMETRI
@@ -19,19 +19,21 @@
 
     <br/>
 
-    <div class="container">
+    <!-- <div class="container">
         <h2>Upload foto</h2>
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="file">
             <input type="submit" value="Unggah">
         </form>
         <h1>{{ unggah }}</h1>
-    </div>
-
+    </div> -->
+    <a href = '/use' style="text-decoration: none; color: inherit;" >
+        <div class="container">
+            <h1 class="text">CBIR</h1>
+        </div>
+    </a>
+    
     <div class="about_us">
-        <!-- <h2>Tentang Kami</h2>
-        <p>Ini adalah halaman utama dari aplikasi Flask sederhana. Aplikasi ini dibuat dengan Flask, sebuah kerangka
-            kerja Python yang ringan dan kuat.</p> -->
         <p>Lebih lanjut tentang kami &nbsp → &nbsp <a href='/about'>About Us</a>.</p>
     </div>
 

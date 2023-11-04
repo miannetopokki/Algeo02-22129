@@ -2,12 +2,61 @@
 <html>
 
 <head>
-    <title>How to use</title>
-</head>
+    <title>Home</title>
 
-<body>
-    <h1>How to use</h1>
-    <p>{{ message }}</p>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+</head>
+<body style="background-color: #ffffff;">
+    <header style="background-color: #ffffff;">
+        <h1 class="text" style="color: blueviolet;">Reverse Image Search</h1>
+    </header>
+    <div class="flex-container">
+        <div class="flex-item"></div>
+        <div class="flex-item-vert flex-container-vertical">
+          <div class="flex-item">
+            <h2 class="text">Upload foto</h2>
+            <form method="POST" enctype="multipart/form-data">
+              <input type="file" name="file">
+              <input type="submit" value="Unggah">
+            </form>
+            <h1>{{ unggah }}</h1>
+          </div>
+          <div class="flex-container">
+            <div class="flex-item toggle-container">
+              <div class="toggle-content-left">
+                <p class="toggle-text">Color</p> <!-- Teks di sebelah kiri tombol toggle -->
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle">
+                <span class="slider round"></span>
+              </label>
+              <div class="toggle-content-right">
+                <p class="toggle-text" >Texture</p> <!-- Teks di sebelah kanan tombol toggle -->
+              </div>
+            </div>
+            <div class="flex-item">
+              <button class="search-button">Search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr style="color: #ccc; background-color: #ccc; height: 1px; border: none;">
+      <div class="separator"></div>
+
+    <div style="color: blueviolet; padding: 20px;">
+        <h2>Result: </h2>
+    </div>
+    <div class="grid-container">
+        <div class="grid-item">1</div>
+        <div class="grid-item">2</div>
+        <div class="grid-item">3</div>
+        <div class="grid-item">4</div>
+        <div class="grid-item">5</div>
+        <div class="grid-item">6</div>
+    </div>
+      
+      
 </body>
 
 </html>

@@ -6,25 +6,36 @@ body {
 }
 
 header {
-    background-color: #333;
+    background-color: #333333;
+    border-radius: 2%;
     color: #fff;
     text-align: center;
-    padding: 20px;
+    padding: 1px;
 }
+
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #7A7675;
+    background-color: #19747E;
     border-radius: 20px;
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+}
+.container:hover {
+    background-color: #19747e7a;
+}
+.text{
+    color:  #E2E2E2;
 }
 
 .about_us {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: #333;
+    background-color: #333333;
     color: #fff;
     text-align: center;
     padding: 10px;
@@ -46,3 +57,137 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+
+
+.flex-container {
+    display: flex;
+    margin: 20px;
+  }
+  
+.flex-container-vertical {
+flex-direction: column;
+
+
+}
+
+.flex-item {
+flex: 1;
+background-color: #b7ced1;
+padding: 20px;
+text-align: center;
+margin: 20px;
+border-radius: 4px;
+}
+.flex-item-vert {
+flex: 1;
+background-color: #b7ced1;
+padding: 20px;
+text-align: center;
+margin: 20px;
+background-color: white;
+}
+.search-button {
+    display: inline-block;
+    background-color: blueviolet;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px; /* Sesuaikan dengan kebutuhan Anda */
+    margin: auto; /* Mengatur margin secara otomatis untuk mengatur tombol di tengah */
+  }
+  
+
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .toggle-switch input {
+    display: none;
+  }
+  
+/* Membuat tombol toggle bundar */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px; /* Mengatur radius border sehingga tombol menjadi bundar */
+    transition: .4s;
+  }
+  
+  /* Menyesuaikan ukuran dan bentuk toggle saat diaktifkan */
+  input:checked + .slider {
+    background-color: #2196F3;
+    border-radius: 34px; /* Mengatur radius border saat tombol diaktifkan */
+  }
+  
+  /* Menyesuaikan bentuk lingkaran saat tombol diaktifkan */
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%; /* Mengatur radius border sehingga menjadi bundar */
+    transition: .4s;
+  }
+  
+  /* Menyesuaikan posisi lingkaran saat tombol diaktifkan */
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+
+/* CSS styles for the toggle button and text */
+/* ... (masukkan kode CSS yang relevan) ... */
+
+.toggle-container {
+    display: flex;
+    align-items: center; /* Mengatur tombol toggle dan teks secara vertikal */
+    justify-content: center; /* Mengatur tombol toggle dan teks secara horizontal (di tengah) */
+  }
+  
+  
+  .toggle-text-left {
+    margin-right:20px; /* Menambahkan ruang antara teks "Kiri" dan tombol toggle */
+    order: -1; /* Memindahkan teks ke sebelah kiri tombol toggle */
+  }
+  
+  .toggle-text-right {
+    margin-left: 10px; /* Menambahkan ruang antara teks "Kanan" dan tombol toggle */
+    order: 1; /* Memindahkan teks ke sebelah kanan tombol toggle */
+  }
+  
+  .toggle-text {
+    margin: 0 10px; /* Menambahkan ruang horizontal antara teks "Kiri" dan "Kanan" dengan tombol toggle */
+    color: blueviolet;
+  }
+  .separator {
+    border: 1px solid #ccc; /* Warna dan ketebalan garis */
+    margin: 10px 0; /* Margin atas dan bawah */
+  }
+  /* CSS untuk grid */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .grid-item {
+    background-color: #b7ced1; /* Menyesuaikan warna latar belakang dengan flex item */
+    padding: 20px;
+    text-align: center;
+    margin: 20px;
+    border-radius: 4px;
+  }
+  
