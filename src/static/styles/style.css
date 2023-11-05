@@ -1,73 +1,73 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #E8E3E1;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #E8E3E1;
+  margin: 0;
+  padding: 0;
 }
 
 header {
-    background-color: #333333;
-    border-bottom-left-radius: 5%;
-    border-bottom-right-radius: 5%;
-    color: #fff;
-    text-align: center;
-    padding: 1px;
+  background-color: #333333;
+  border-bottom-left-radius: 5%;
+  border-bottom-right-radius: 5%;
+  color: #fff;
+  text-align: center;
+  padding: 1px;
 }
 
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #19747E;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center; /* Horizontally center */
-    align-items: center; /* Vertically center */
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #19747E;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center; /* Horizontally center */
+  align-items: center; /* Vertically center */
 }
 .container:hover {
-    background-color: #19747e7a;
+  background-color: #19747e7a;
 }
 .text{
-    color:  #E2E2E2;
+  color: rgba(22, 14, 90, 0.993)
 }
 
 .about_us {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background-color: #333333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    border-top-left-radius: 10%;
-    border-top-right-radius: 10%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #333333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-top-left-radius: 10%;
+  border-top-right-radius: 10%;
 }
 
 h1 {
-    font-size: 36px;
+  font-size: 36px;
 }
 
 p {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 a {
-    text-decoration: none;
-    color: #007bff;
+  text-decoration: none;
+  color: #007bff;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 
 
 .flex-container {
-    display: flex;
-    margin: 20px;
-  }
-  
+  display: flex;
+  margin: 20px;
+}
+
 .flex-container-vertical {
 flex-direction: column;
 
@@ -91,106 +91,156 @@ margin: 20px;
 background-color: white;
 }
 .search-button {
-    display: inline-block;
-    background-color: blueviolet;
-    color: white;
-    border-radius: 5px;
-    padding: 5px 10px; /* Sesuaikan dengan kebutuhan Anda */
-    margin: auto; /* Mengatur margin secara otomatis untuk mengatur tombol di tengah */
-  }
-  
+  display: inline-block;
+  background-color: blueviolet;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px; /* Sesuaikan dengan kebutuhan Anda */
+  margin: auto; /* Mengatur margin secara otomatis untuk mengatur tombol di tengah */
+}
+
 
 
 .toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-  }
-  
-  .toggle-switch input {
-    display: none;
-  }
-  
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
 /* Membuat tombol toggle bundar */
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    border-radius: 34px; /* Mengatur radius border sehingga tombol menjadi bundar */
-    transition: .4s;
-  }
-  
-  /* Menyesuaikan ukuran dan bentuk toggle saat diaktifkan */
-  input:checked + .slider {
-    background-color: #2196F3;
-    border-radius: 34px; /* Mengatur radius border saat tombol diaktifkan */
-  }
-  
-  /* Menyesuaikan bentuk lingkaran saat tombol diaktifkan */
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    border-radius: 50%; /* Mengatur radius border sehingga menjadi bundar */
-    transition: .4s;
-  }
-  
-  /* Menyesuaikan posisi lingkaran saat tombol diaktifkan */
-  input:checked + .slider:before {
-    transform: translateX(26px);
-  }
-  
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px; /* Mengatur radius border sehingga tombol menjadi bundar */
+  transition: .4s;
+}
+
+/* Menyesuaikan ukuran dan bentuk toggle saat diaktifkan */
+input:checked + .slider {
+  background-color: #2196F3;
+  border-radius: 34px; /* Mengatur radius border saat tombol diaktifkan */
+}
+
+/* Menyesuaikan bentuk lingkaran saat tombol diaktifkan */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%; /* Mengatur radius border sehingga menjadi bundar */
+  transition: .4s;
+}
+
+/* Menyesuaikan posisi lingkaran saat tombol diaktifkan */
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
 
 /* CSS styles for the toggle button and text */
 /* ... (masukkan kode CSS yang relevan) ... */
 
 .toggle-container {
-    display: flex;
-    align-items: center; /* Mengatur tombol toggle dan teks secara vertikal */
-    justify-content: center; /* Mengatur tombol toggle dan teks secara horizontal (di tengah) */
-  }
-  
-  
-  .toggle-text-left {
-    margin-right:20px; /* Menambahkan ruang antara teks "Kiri" dan tombol toggle */
-    order: -1; /* Memindahkan teks ke sebelah kiri tombol toggle */
-  }
-  
-  .toggle-text-right {
-    margin-left: 10px; /* Menambahkan ruang antara teks "Kanan" dan tombol toggle */
-    order: 1; /* Memindahkan teks ke sebelah kanan tombol toggle */
-  }
-  
-  .toggle-text {
-    margin: 0 10px; /* Menambahkan ruang horizontal antara teks "Kiri" dan "Kanan" dengan tombol toggle */
-    color: blueviolet;
-  }
-  .separator {
-    border: 1px solid #ccc; /* Warna dan ketebalan garis */
-    margin: 10px 0; /* Margin atas dan bawah */
-  }
-  /* CSS untuk grid */
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 10px 0;
-  }
-  
-  .grid-item {
-    background-color: #b7ced1; /* Menyesuaikan warna latar belakang dengan flex item */
-    padding: 20px;
-    text-align: center;
-    margin: 20px;
-    border-radius: 4px;
-  }
-  
+  display: flex;
+  align-items: center; /* Mengatur tombol toggle dan teks secara vertikal */
+  justify-content: center; /* Mengatur tombol toggle dan teks secara horizontal (di tengah) */
+}
+
+
+.toggle-text-left {
+  margin-right:20px; /* Menambahkan ruang antara teks "Kiri" dan tombol toggle */
+  order: -1; /* Memindahkan teks ke sebelah kiri tombol toggle */
+}
+
+.toggle-text-right {
+  margin-left: 10px; /* Menambahkan ruang antara teks "Kanan" dan tombol toggle */
+  order: 1; /* Memindahkan teks ke sebelah kanan tombol toggle */
+}
+
+.toggle-text {
+  margin: 0 10px; /* Menambahkan ruang horizontal antara teks "Kiri" dan "Kanan" dengan tombol toggle */
+  color: blueviolet;
+}
+.separator {
+  border: 1px solid #ccc; /* Warna dan ketebalan garis */
+  margin: 10px 0; /* Margin atas dan bawah */
+}
+
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Mengatur jumlah kolom dan lebar setiap kolom */
+  gap: 10px; /* Jarak antara item dalam grid */
+  margin: 10px 0; /* Margin atas dan bawah grid */
+}
+
+.image-item {
+  background-color: #eee; /* Warna latar belakang item grid */
+  padding: 20px; /* Padding untuk item grid */
+  text-align: center; /* Teks di tengah item */
+}
+
+.image-item img {
+  max-width: 100%; /* Gambar tidak melebihi lebar kontainer */
+  max-height: 100%; /* Gambar tidak melebihi tinggi kontainer */
+  display: block; /* Menghapus spasi putih di sekitar gambar */
+  margin: 0 auto; /* Mengatur gambar ke tengah item */
+}
+
+/* Gaya dasar tombol pagination */
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  background-color: #f2f2f2;
+  border-radius: 4px;
+}
+
+/* Gaya tombol saat tidak di-hover */
+.pagination li {
+  margin: 2px;
+  padding: 5px 10px;
+}
+
+/* Gaya tombol saat di-hover */
+.pagination li:hover {
+  background-color: #007bff; /* Ubah warna latar belakang saat di hover */
+  color: #fff; /* Ubah warna teks saat di hover */
+}
+
+/* Gaya tombol aktif (halaman saat ini) */
+.pagination .active {
+  background-color: #007bff; /* Warna latar belakang khusus untuk tombol aktif */
+  color: #fff; /* Warna teks khusus untuk tombol aktif */
+  border-radius: 4px; /* Menambahkan border radius ke tombol aktif */
+}
+.pagination-button {
+  background-color: #6d6d6d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block; /* Mengubah tampilan tombol menjadi block */
+  margin: 0 auto; /* Untuk membuat tombol tampak di tengah */
+  font-size: 32px;
+  border-radius: 10px;
+}
+
+.pagination-button:hover {
+  background-color: #555;
+}
+
