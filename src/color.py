@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import time
 import glob
 #np.set_printoptions(threshold=np.inf)
 
@@ -19,7 +20,7 @@ def convert_rgb_to_hsv(image):
     h=([[0 for i in range(col)] for j in range(row)])
     s=([[0 for i in range(col)] for j in range(row)])
     v=cmax
-
+    
 
     for i in range(row):
         for j in range(col):
@@ -40,36 +41,6 @@ def convert_rgb_to_hsv(image):
                 s[i][j]=delta[i][j]/cmax[i][j]
             h[i][j], s[i][j], v[i][j] = quantify(h[i][j],s[i][j],v[i][j])
 
-    # for i in range(row):
-    #     for j in range(col):
-    #         if (h[i][j]>=316):
-    #             h[i][j]=0
-    #         elif (h[i][j]>=1 and h[i][j] <=25):
-    #             h[i][j]=1
-    #         elif (h[i][j]>25 and h[i][j]<=40):
-    #             h[i][j]=2
-    #         elif (h[i][j]>40 and h[i][j]<=120):
-    #             h[i][j]=3
-    #         elif (h[i][j]>120 and h[i][j]<=190):
-    #             h[i][j]=4
-    #         elif (h[i][j]> 190 and h[i][j]<=270):
-    #             h[i][j]=5
-    #         elif (h[i][j]>270 and h[i][j]<=295):
-    #             h[i][j]=6
-    #         elif (h[i][j]>295 and h[i][j]<=315):
-    #             h[i][j]=7
-    #         if (s[i][j]<0.2):
-    #             s[i][j]=0
-    #         elif (s[i][j]>=0.2 and s[i][j]<0.7):
-    #             s[i][j]=1
-    #         else:
-    #             s[i][j]=2
-    #         if (v[i][j]<0.2):
-    #             v[i][j]=0
-    #         elif (v[i][j]>=0.2 and v[i][j]<0.7):
-    #             v[i][j]=1
-    #         else:
-    #             v[i][j]=2
 
     quantified_hsv = np.transpose([h, s, v], (1, 2, 0))
     quantified_hsv = quantified_hsv.astype(int)
@@ -207,23 +178,22 @@ if __name__ == "__main__":
     query_image = cv2.imread("7.jpg")
 
     # Database
-    database_images = [
-        cv2.imread("7.jpg"),
-        cv2.imread("8.jpg"),
-        cv2.imread("9.jpg"),
-        cv2.imread("3549.jpg"),
-        cv2.imread("tes.jpg"),
-    ]
-    # i=1
-    # for img in glob.glob("../img/dataset/*.jpg"):
-    #     n = cv2.imread(img)
-    #     print(i)
-    #     database_images.append(n)
-    #     i+=1
-
+    # database_images = [
+    #     cv2.imread("7.jpg"),
+    #     cv2.imread("8.jpg"),
+    #     cv2.imread("9.jpg"),
+    #     cv2.imread("3549.jpg"),
+    #     cv2.imread("tes.jpg"),
+    # ]
+    database_images = []
+    for img in glob.glob("./static/datasets/*.jpg"):
+        n = cv2.imread(img)
+        database_images.append(n)
+    start = time.time()
     result = color_based_image_retrieval(query_image, database_images)
-    
-
+    end =time.time()
+    duration = end-start
+    print(f'Time taken: {duration}')
     # display matches
     cv2.imshow("Query image", query_image)
     for i, (image, similarity) in enumerate(result):
