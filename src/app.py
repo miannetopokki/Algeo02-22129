@@ -25,6 +25,9 @@ def upload_file():
     return render_template('main.html')
 
     
+@app.route('/use')
+def use():
+    return render_template('use.html')
 
 
 if __name__ == '__main__':
