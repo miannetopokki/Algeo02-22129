@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import glob
 #np.set_printoptions(threshold=np.inf)
 
 def convert_rgb_to_hsv(image):
@@ -54,31 +55,32 @@ def quantify(hsv):
                 h[i][j]=0
             elif (h[i][j]>=1 and h[i][j] <=25):
                 h[i][j]=1
-            elif (h[i][j]<=40):
+            elif (h[i][j]>25 and h[i][j]<=40):
                 h[i][j]=2
-            elif (h[i][j]<=120):
+            elif (h[i][j]>40 and h[i][j]<=120):
                 h[i][j]=3
-            elif (h[i][j]<=190):
+            elif (h[i][j]>120 and h[i][j]<=190):
                 h[i][j]=4
-            elif (h[i][j]<=270):
+            elif (h[i][j]> 190 and h[i][j]<=270):
                 h[i][j]=5
-            elif (h[i][j]<=295):
+            elif (h[i][j]>270 and h[i][j]<=295):
                 h[i][j]=6
-            elif (h[i][j]<=315):
+            elif (h[i][j]>295 and h[i][j]<=315):
                 h[i][j]=7
             if (s[i][j]<0.2):
                 s[i][j]=0
-            elif (s[i][j]<0.7):
+            elif (s[i][j]>=0.2 and s[i][j]<0.7):
                 s[i][j]=1
             else:
                 s[i][j]=2
             if (v[i][j]<0.2):
                 v[i][j]=0
-            elif (v[i][j]<0.7):
+            elif (v[i][j]>=0.2 and v[i][j]<0.7):
                 v[i][j]=1
             else:
                 v[i][j]=2
     quantified_hsv = np.transpose([h, s, v], (1, 2, 0))
+    quantified_hsv = quantified_hsv.astype(int)
     return quantified_hsv
 
 #euclidean distance untuk rumus dari referensi
@@ -94,24 +96,61 @@ def cosine_similarity(vector1, vector2):
     similarity = dot_product / (len_vector1 * len_vector2)
     return similarity
 
+def histogram(hsv):
+    hist = np.zeros(14, dtype=int)
+    h=hsv[:,:,0]
+    s=hsv[:,:,1]
+    v=hsv[:,:,2]
+    width=len(h)
+    height=len(h[0])
+    for i in range(width):
+        for j in range(height):
+            hist[h[i][j]]+=1
+            hist[s[i][j]+8]+=1
+            hist[v[i][j]+11]+=1
+    return hist
+
+
+
 def pencarian_blok(query,database):
     height_q, width_q, _ = query.shape
     height_db, width_db, _ = database.shape
+    query = quantify(query)
+    database = quantify(database)
     # with open('query.txt', 'w') as f:
     #     print(query, file=f)
-    block_size = 3
+    if (height_q%3==0):
+        block_height = [height_q/3, height_q/3, height_q/3]
+    elif (height_q%3==1):
+        block_height = [(height_q//3)+1, height_q//3, height_q//3]
+    else:
+        block_height = [(height_q//3)+1, height_q//3, (height_q//3)+1]
+
+    if (width_q%3==0):
+        block_width = [width_q/3, width_q/3, width_q/3]
+    elif (width_q%3==1):
+        block_width = [(width_q//3)+1, width_q//3, width_q//3]
+    else:
+        block_width = [(width_q//3)+1, width_q//3, (width_q//3)+1]
+
     similarities = []
-    for i in range(0, height_q, block_size):
-        for j in range(0, width_q, block_size):
-            block_query = query[i:i+block_size, j:j+block_size]
-            block_database = database[i:i+block_size, j:j+block_size]
-            vector_query=block_query.flatten()
-            vector_db=block_database.flatten()
-            #Reference method
-            #similarity=euclid_distance(vector_db,vector_query)
-            #metode ori
-            similarity=cosine_similarity(vector_db,vector_query)
+    p=0
+    k=1
+    for i in range(0, height_q, block_height[p]):
+        q=0
+        for j in range(0, width_q, block_width[q]):
+            block_query = query[i:i+block_height[p], j:j+block_width[q]]
+            block_database = database[i:i+block_height[p], j:j+block_width[q]]
+            print(k)
+            k+=1
+            hist_query = histogram(block_query)
+            hist_db = histogram(block_database)
+            #similarity = euclid_distance(hist_query,hist_db)
+            similarity = cosine_similarity(hist_query, hist_db)
+            print(similarity)
             similarities.append(similarity)
+            q+=1
+        p+=1
     similarities=np.array(similarities)
 
     average_similarity = np.mean(similarities)
@@ -131,13 +170,15 @@ def color_based_image_retrieval(query_image, database_images):
     #query_image = quantify(query_image)
 
     matches = []
-
+    i=1
     for image in database_images:
         db_image = convert_rgb_to_hsv(image)
         #db_image = quantify(db_image)
         similarity = pencarian_blok(query_image,db_image)
+        print(i)
         #if (similarity>=60):
         matches.append((image, similarity))
+        i+=1
 
     # Mengurutkan citra berdasarkan tingkat kesamaan
     matches.sort(key=lambda x: x[1], reverse=True)
@@ -150,12 +191,17 @@ if __name__ == "__main__":
 
     # Database
     database_images = [
-        cv2.imread("7.jpg"),
         cv2.imread("8.jpg"),
         cv2.imread("9.jpg"),
+        cv2.imread("3549.jpg"),
         cv2.imread("tes.jpg"),
-        cv2.imread("3549.jpg")
     ]
+    # i=1
+    # for img in glob.glob("../img/dataset/*.jpg"):
+    #     n = cv2.imread(img)
+    #     print(i)
+    #     database_images.append(n)
+    #     i+=1
 
     result = color_based_image_retrieval(query_image, database_images)
     
