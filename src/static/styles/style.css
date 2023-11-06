@@ -65,9 +65,28 @@ a:hover {
 
 .flex-container {
   display: flex;
-  margin: 20px;
+  margin: 10px;
+}
+.flex-container {
+  display: flex;
+  justify-content: center; /* Mengatur konten horizontal ke tengah */
+  align-items: center; /* Mengatur konten vertikal ke tengah */
 }
 
+.flex-item-image {
+  flex: 1;
+  background: linear-gradient(to right, #dad8d7, #7575b680);
+  padding: 20px;
+  text-align: center;
+  margin: 20px;
+  border-radius: 10px;
+}
+
+/* Untuk gambar di dalam .flex-item-image */
+.flex-item-image img {
+  max-width: 100%;
+  max-height: 100%;
+}
 .flex-container-vertical {
 flex-direction: column;
 
@@ -75,12 +94,13 @@ flex-direction: column;
 }
 
 .flex-item {
-flex: 1;
-background-color: #b7ced1;
-padding: 20px;
-text-align: center;
-margin: 20px;
-border-radius: 4px;
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+  margin: 20px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #dad8d7, #7575b667);
+  border: 5px solid rgba(0, 0, 0, 0.192);
 }
 .flex-item-vert {
 flex: 1;
@@ -183,21 +203,38 @@ input:checked + .slider:before {
 .image-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Mengatur jumlah kolom dan lebar setiap kolom */
-  gap: 10px; /* Jarak antara item dalam grid */
-  margin: 10px 0; /* Margin atas dan bawah grid */
+  gap: 50px; /* Jarak antara item dalam grid */
+  margin: 2px 0; /* Margin atas dan bawah grid */
+  padding: 20px;
 }
 
 .image-item {
-  background-color: #eee; /* Warna latar belakang item grid */
-  padding: 20px; /* Padding untuk item grid */
-  text-align: center; /* Teks di tengah item */
+  width: 100%; /* Item gambar 100% lebar dari parentnya */
+  position: relative;
+  overflow: visible; /* Mengizinkan gambar melampaui batas elemen */
+  background-color: #90a1b3;
+  transition: transform 0.2s; /* Efek transisi pada transformasi */
 }
 
 .image-item img {
-  max-width: 100%; /* Gambar tidak melebihi lebar kontainer */
-  max-height: 100%; /* Gambar tidak melebihi tinggi kontainer */
-  display: block; /* Menghapus spasi putih di sekitar gambar */
-  margin: 0 auto; /* Mengatur gambar ke tengah item */
+  max-width: 100%; /* Gambar tidak melebihi lebar elemen */
+  max-height: 100%; /* Gambar tidak melebihi tinggi elemen */
+  width: auto; /* Lebar gambar otomatis disesuaikan */
+  height: auto; /* Tinggi gambar otomatis disesuaikan */
+  transition: transform 0.2s; /* Efek transisi pada transformasi */
+}
+
+.image-item:hover img {
+  transform: scale(1.2); /* Memperbesar gambar saat elemen di-hover */
+  z-index: 1; /* Mengatur z-index untuk menampilkan di atas elemen lain */
+  transition: transform 0.5s; /* Efek transisi yang lebih lambat */
+}
+.image-item:hover {
+  transform: scale(1.1); /* Membesarkan elemen saat dihover */
+}
+.grid-container {
+  margin: 0 auto; /* Mengatur kontainer grid ke tengah halaman */
+  max-width: 1200px; /* Mengatur lebar maksimum kontainer (sesuaikan sesuai kebutuhan) */
 }
 
 /* Gaya dasar tombol pagination */
@@ -244,3 +281,29 @@ input:checked + .slider:before {
   background-color: #555;
 }
 
+
+.image-item {
+  position: relative;
+}
+
+.image-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.similarity-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.image-item:hover .similarity-text {
+  opacity: 1;
+}

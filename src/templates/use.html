@@ -13,7 +13,7 @@
         <h1 class="text" style="color: blueviolet;">Reverse Image Search</h1>
     </header>
     <div class="flex-container">
-        <div class="flex-item">
+        <div class="flex-item-image">
             <img src="{{ image_url }}" alt="Uploaded Image"> <!-- Tambahkan elemen img dengan src yang sesuai -->
         </div>
         <div class="flex-item-vert flex-container-vertical">
@@ -22,7 +22,7 @@
                 
                 <form method="POST" enctype="multipart/form-data" action="/use">
                     <input type="file" name="file">
-                    <input type="submit" value="Unggah">
+                    <input type="submit" name = "action" value="Unggah">
                 </form>
                 <h2 class="text">{{namafile}}</h2>
                 <h2 class="text">{{ unggah }}</h2>
@@ -41,8 +41,41 @@
                     </div>
                 </div>
                 <div class="flex-item">
-                    <button class="search-button">Search</button>
+                    <form action="/use" method="POST">
+                        <button type="submit" class="search-button" name = "action" value="Search">Search</button>
+                    </form>
                 </div>
+            </div>
+            <div class="flex-item">
+                <button id="kamera-button" class="search-button">Fitur Kamera</button>
+
+                <script>
+                    const kameraButton = document.getElementById("kamera-button");
+
+                    kameraButton.addEventListener("click", () => {
+                        // Gunakan API getUserMedia untuk mengakses kamera
+                        if (navigator.mediaDevices.getUserMedia) {
+                            navigator.mediaDevices.getUserMedia({ video: true })
+                                .then(function (stream) {
+                                    // Anda dapat melakukan apa pun dengan aliran video, misalnya menampilkan aliran video di elemen video
+                                    const videoElement = document.createElement("video");
+                                    videoElement.srcObject = stream;
+                                    videoElement.autoplay = true;
+                                    kameraButton.parentElement.appendChild(videoElement); // Menambahkan elemen video ke kontainer
+                                })
+                                .catch(function (error) {
+                                    console.error("Gagal mengakses kamera: " + error);
+                                });
+                        } else {
+                            alert("Peramban Anda tidak mendukung akses kamera.");
+                        }
+                    });
+                    </script>
+                
+
+            </div>
+            <div class="flex-item">
+                <h2 class="text">Waktu : {{durasi}}</h2>
             </div>
         </div>
     </div>
@@ -50,23 +83,36 @@
     <div style="color: blueviolet; padding: 20px;">
         <h2>Result: </h2>
     </div>
-    <div class="image-grid">
-        {% for image in image_list %}
-          <div class="image-item">
-            <img src="{{ image }}" alt="Image">
-          </div>
-        {% endfor %}
-      </div>
+    <div class="grid-container">
+        <div class="image-grid">
+            {% for image in image_list %}
+                <div class="image-item">
+                    <div class="image-hover">
+                        <img src="{{ image }}" alt="Image">
+                    </div>  
+                    {% if result %}
+                        <h2 class="similarity-text">Similarity : {{ result[loop.index - 1][1] }}</h2>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
       
       <div class="pagination">
         {% if current_page > 1 %}
             <a class="pagination-button" href="?page={{ current_page - 1 }}">Previous</a>
         {% endif %}
-        
+        <h2 style="color: blueviolet;">{{ current_page }}</h2>
         {% if current_page < num_pages %}
             <a class="pagination-button" href="?page={{ current_page + 1 }}">Next</a>
         {% endif %}
     </div>
+    <div class="pagination">
+        {% for page_num in range(1, num_pages + 1) %}
+            <a class = "pagination-button"href="?page={{ page_num }}">{{ page_num }}</a>
+        {% endfor %}
+    </div>
+    
     
       
     
