@@ -3,12 +3,16 @@
 
 <head>
     <title>About us</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styleabout.css') }}">
 </head>
 
 <body>
     <h1>About us</h1>
-    <p>{{ message }}</p>
-    <p> {{ angka }}</p>
+
+    <div class="meme">
+        <img src="{{ url_for('static', filename='if.jpg') }}">
+    </div>
+
 </body>
 
 </html>
