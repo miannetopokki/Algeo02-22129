@@ -2,6 +2,14 @@ from PIL import Image
 import math
 import time
 
+# CARA MENGGUNAKAN (PENTING UNTUK DIBACA)
+#   1.  Siapkan nama file image yang ingin dicari similaritas teksturnya (.jpg, .jpeg, .png, dll.)
+#   2.  Ubah gambar ke vektor dengan komponen <contrast, homogeneity, entropy> dengan fungsi imgToVector(Nama_File_Gambar)
+#   3.  Untuk mencari similaritas tekstur 2 gambar, gunakan fungsi cosSimilarity(Vektor_Gambar_Referensi, Vektor_Gambar_Dataset)
+#       (Perhatikan bahwa cosSimilarity akan mengembalikan nilai dalam range hasil fungsi cosinus, yaitu 0 <= cos(x) <= 1,
+#       sehingga untuk mengubahnya ke dalam persen, perlu dikali 100)
+#   Tambahan: imgToVector dan cosSimilarity merupakan FUNCTION, bukan procedure, sehingga dibutuhkan variabel untuk menampung return value-nya
+
 def rgbToGrayscale(RGBImage):
     # Ekstrak ukuran
     width, height = RGBImage.size
@@ -157,6 +165,30 @@ def normalizeVec(V):
     # Mengembalikan vektor yang sudah dinormalisasi
     return V
 
+def imgToVector(img_name):
+    # Buka file dengan nama img_name
+    img = Image.open(img_name)
+
+    # Ubah ke grayscale
+    gscale_img = rgbToGrayscale(img)
+
+    # Pembuatan Co-Occurrence Matrix
+    coOcc_img = coOccMtx(gscale_img, 0)
+
+    # Normalisasi Co-Occurrence Matrix
+    coOcc_img = normalize(coOcc_img)
+
+    # Ambil nilai contrast, homogeneity, dan entropy
+    cont = contrast(coOcc_img)
+    hom = homogeneity(coOcc_img)
+    ent = entropy(coOcc_img)
+
+    # Tutup file gambar
+    img.close()
+
+    # Mengembalikan vektor [cont, hom, ent]
+    return [cont, hom, ent]
+
 def cosSimilarity(v1, v2):
     # Pembilang
     numerator = 0
@@ -179,107 +211,10 @@ def cosSimilarity(v1, v2):
     # Mengembalikan nilai cosine similarity
     return numerator / denominator
 
-start = time.time()
+# ------------------------------------------------------------------ TEST CASE ------------------------------------------------------------------
 
-# Buka file foto
-img_ref = Image.open('albert.jpg')
-img_set = Image.open('white.jpg')
+# vec_ref = imgToVector('albert.jpg')
+# vec_set = imgToVector('jokowi.jpeg')
 
-# Ubah ke grayscale
-gscale_img_ref = rgbToGrayscale(img_ref)
-gscale_img_set = rgbToGrayscale(img_set)
-
-# Pembuatan Co-Occurence Matrix
-coOcc_ref_0 = coOccMtx(gscale_img_ref, 0)
-coOcc_set_0 = coOccMtx(gscale_img_set, 0)
-coOcc_ref_45 = coOccMtx(gscale_img_ref, 45)
-coOcc_set_45 = coOccMtx(gscale_img_set, 45)
-coOcc_ref_90 = coOccMtx(gscale_img_ref, 90)
-coOcc_set_90 = coOccMtx(gscale_img_set, 90)
-coOcc_ref_135 = coOccMtx(gscale_img_ref, 135)
-coOcc_set_135 = coOccMtx(gscale_img_set, 135)
-
-# Normalisasi matrix Co-Occurence
-coOcc_ref_0 = normalize(coOcc_ref_0)
-coOcc_set_0 = normalize(coOcc_set_0)
-coOcc_ref_45 = normalize(coOcc_ref_45)
-coOcc_set_45 = normalize(coOcc_set_45)
-coOcc_ref_90 = normalize(coOcc_ref_90)
-coOcc_set_90 = normalize(coOcc_set_90)
-coOcc_ref_135 = normalize(coOcc_ref_135)
-coOcc_set_135 = normalize(coOcc_set_135)
-
-# Ambil nilai contrast
-contrast_ref_0 = contrast(coOcc_ref_0)
-contrast_set_0 = contrast(coOcc_set_0)
-contrast_ref_45 = contrast(coOcc_ref_45)
-contrast_set_45 = contrast(coOcc_set_45)
-contrast_ref_90 = contrast(coOcc_ref_90)
-contrast_set_90 = contrast(coOcc_set_90)
-contrast_ref_135 = contrast(coOcc_ref_135)
-contrast_set_135 = contrast(coOcc_set_135)
-
-# Ambil nilai homogeneity
-homogeneity_ref_0 = homogeneity(coOcc_ref_0)
-homogeneity_set_0 = homogeneity(coOcc_set_0)
-homogeneity_ref_45 = homogeneity(coOcc_ref_45)
-homogeneity_set_45 = homogeneity(coOcc_set_45)
-homogeneity_ref_90 = homogeneity(coOcc_ref_90)
-homogeneity_set_90 = homogeneity(coOcc_set_90)
-homogeneity_ref_135 = homogeneity(coOcc_ref_135)
-homogeneity_set_135 = homogeneity(coOcc_set_135)
-
-# Ambil nilai entropy
-entropy_ref_0 = entropy(coOcc_ref_0)
-entropy_set_0 = entropy(coOcc_set_0)
-entropy_ref_45 = entropy(coOcc_ref_45)
-entropy_set_45 = entropy(coOcc_set_45)
-entropy_ref_90 = entropy(coOcc_ref_90)
-entropy_set_90 = entropy(coOcc_set_90)
-entropy_ref_135 = entropy(coOcc_ref_135)
-entropy_set_135 = entropy(coOcc_set_135)
-
-# Buat vektor ref dan set
-v_ref_0 = [contrast_ref_0, homogeneity_ref_0, entropy_ref_0]
-v_set_0 = [contrast_set_0, homogeneity_set_0, entropy_set_0]
-v_ref_45 = [contrast_ref_45, homogeneity_ref_45, entropy_ref_45]
-v_set_45 = [contrast_set_45, homogeneity_set_45, entropy_set_45]
-v_ref_90 = [contrast_ref_90, homogeneity_ref_90, entropy_ref_90]
-v_set_90 = [contrast_set_90, homogeneity_set_90, entropy_set_90]
-v_ref_135 = [contrast_ref_135, homogeneity_ref_135, entropy_ref_135]
-v_set_135 = [contrast_set_135, homogeneity_set_135, entropy_set_135]
-# v_ref = [contrast_ref_0, homogeneity_ref_0, entropy_ref_0, contrast_ref_45, homogeneity_ref_45, entropy_ref_45, contrast_ref_90, homogeneity_ref_90, entropy_ref_90, contrast_ref_135, homogeneity_ref_135, entropy_ref_135]
-# v_set = [contrast_set_0, homogeneity_set_0, entropy_set_0, contrast_set_45, homogeneity_set_45, entropy_set_45, contrast_set_90, homogeneity_set_90, entropy_set_90, contrast_set_135, homogeneity_set_135, entropy_set_135]
-
-# Normalisasi vektor ref dan set
-# v_ref_0 = normalizeVec(v_ref_0)
-# v_set_0 =  normalizeVec(v_set_0)
-# v_ref_45 = normalizeVec(v_ref_45)
-# v_set_45 = normalizeVec(v_set_45)
-# v_ref_90 = normalizeVec(v_ref_90)
-# v_set_90 = normalizeVec(v_set_90)
-# v_ref_135 = normalizeVec(v_ref_135)
-# v_set_135 = normalizeVec(v_set_135)
-# v_ref = normalizeVec(v_ref)
-# v_set = normalizeVec(v_set)
-
-# Cari cosine similarity
-cosSim_0 = cosSimilarity(v_ref_0, v_set_0)
-cosSim_45 = cosSimilarity(v_ref_45, v_set_45)
-cosSim_90 = cosSimilarity(v_ref_90, v_set_90)
-cosSim_135 = cosSimilarity(v_ref_135, v_set_135)
-
-# Cari nilai rata-rata
-cosSimAvg = (cosSim_0 + cosSim_45 + cosSim_90 + cosSim_135) / 4
-# cosSimAvg = cosSimilarity(v_ref, v_set)
-
-end = time.time()
-duration = end - start
-
-# Tampilkan pada layar kemiripan dan waktu yang dibutuhkan untuk memproses gambar
-print(f'Similarity: {cosSimAvg*100}')
-print(f'Time taken: {duration}')
-
-# Tutup file
-img_ref.close()
-img_set.close()
+# similarity = 100 * cosSimilarity(vec_ref, vec_set)
+# print(f'similarity: {similarity}')
