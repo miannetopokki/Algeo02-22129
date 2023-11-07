@@ -1,63 +1,46 @@
 import cv2
 import numpy as np
-from PIL import Image
+import matplotlib.pyplot as plt
 import math
 import time
 import glob
 #np.set_printoptions(threshold=np.inf)
 
 def convert_rgb_to_hsv(image):
-    row, col = image.size
-    h=np.zeros((row,col))
-    s=np.zeros((row,col))
-    v=np.zeros((row,col))
-    for i in range(row):
-        for j in range(col):
-            r,g,b = image.getpixel((j,i))
-            r,g,b = r/255, g/255, b/255
-            cmax = max(r,g,b)
-            cmin = min(r,g,b)
-            delta = cmax-cmin
-            v[i][j]=cmax
-            if (delta==0):
-                h[i][j]=0
-            elif (cmax==r):
-                h[i][j]=60*(((g-b)/delta)%6)
-            elif (cmax==g):
-                h[i][j]=60*(((b-r)/delta)+2)
-            else:
-                h[i][j]=60*(((r-g)/delta)+4)
-            if (cmax!=0):
-                s[i][j]=delta/cmax
-            h[i][j], s[i][j], v[i][j] = quantify(h[i][j],s[i][j],v[i][j])
-
-    # image_mat = image/255
-    # r=image_mat[:,:,0]
-    # g=image_mat[:,:,1]
-    # b=image_mat[:,:,2]
-    # cmax=np.max(image_mat, axis=2)
-    # cmin=np.min(image_mat, axis=2)
-    # delta=(cmax-cmin)
+    image=image[:, :, ::-1]
+    image_mat = image/255
+    r=image_mat[:,:,0]
+    g=image_mat[:,:,1]
+    b=image_mat[:,:,2]
+    row=len(r)
+    col=len(r[0])
+    cmax=([[0 for i in range(col)] for j in range(row)])
+    cmin=([[0 for i in range(col)] for j in range(row)])
+    delta=([[0 for i in range(col)] for j in range(row)])
+    h=([[0 for i in range(col)] for j in range(row)])
+    s=([[0 for i in range(col)] for j in range(row)])
+    v=cmax
     
 
-    # for i in range(row):
-    #     for j in range(col):
-    #         cmax[i][j]=max(r[i][j],g[i][j],b[i][j])
-    #         cmin[i][j]=min(r[i][j],g[i][j],b[i][j])
-    #         delta[i][j]=cmax[i][j]-cmin[i][j]
-    # for i in range(row):
-    #     for j in range(col):
-    #         if (delta[i][j]==0):
-    #             h[i][j]=0
-    #         elif (cmax[i][j]==r[i][j]):
-    #             h[i][j]=60*(((g[i][j]-b[i][j])/delta[i][j])%6)
-    #         elif (cmax[i][j]==g[i][j]):
-    #             h[i][j]=60*(((b[i][j]-r[i][j])/delta[i][j])+2)
-    #         else:
-    #             h[i][j]=60*(((r[i][j]-g[i][j])/delta[i][j])+4)
-    #         if (cmax[i][j]!=0):
-    #             s[i][j]=delta[i][j]/cmax[i][j]
-    #         h[i][j], s[i][j], v[i][j] = quantify(h[i][j],s[i][j],v[i][j])
+    for i in range(row):
+        for j in range(col):
+            cmax[i][j]=max(r[i][j],g[i][j],b[i][j])
+            cmin[i][j]=min(r[i][j],g[i][j],b[i][j])
+            delta[i][j]=cmax[i][j]-cmin[i][j]
+    for i in range(row):
+        for j in range(col):
+            if (delta[i][j]==0):
+                h[i][j]=0
+            elif (cmax[i][j]==r[i][j]):
+                h[i][j]=60*(((g[i][j]-b[i][j])/delta[i][j])%6)
+            elif (cmax[i][j]==g[i][j]):
+                h[i][j]=60*(((b[i][j]-r[i][j])/delta[i][j])+2)
+            else:
+                h[i][j]=60*(((r[i][j]-g[i][j])/delta[i][j])+4)
+            if (cmax[i][j]!=0):
+                s[i][j]=delta[i][j]/cmax[i][j]
+            h[i][j], s[i][j], v[i][j] = quantify(h[i][j],s[i][j],v[i][j])
+
 
     quantified_hsv = np.transpose([h, s, v], (1, 2, 0))
     quantified_hsv = quantified_hsv.astype(int)
@@ -66,29 +49,29 @@ def convert_rgb_to_hsv(image):
 def quantify(h,s,v):
     if (h>=316):
         h=0
-    elif (h <=25):
+    elif (h>=1 and h <=25):
         h=1
-    elif (h<=40):
+    elif (h>25 and h<=40):
         h=2
-    elif (h<=120):
+    elif (h>40 and h<=120):
         h=3
-    elif (h<=190):
+    elif (h>120 and h<=190):
         h=4
-    elif (h<=270):
+    elif (h> 190 and h<=270):
         h=5
-    elif (h<=295):
+    elif (h>270 and h<=295):
         h=6
-    elif (h<=315):
+    elif (h>295 and h<=315):
         h=7
     if (s<0.2):
         s=0
-    elif (s<0.7):
+    elif (s>=0.2 and s<0.7):
         s=1
     else:
         s=2
     if (v<0.2):
         v=0
-    elif (v<0.7):
+    elif (v>=0.2 and v<0.7):
         v=1
     else:
         v=2
@@ -130,18 +113,18 @@ def pencarian_blok(query,database):
     height_q, width_q, _ = query.shape
     height_db, width_db, _ = database.shape
     if (height_q%3==0):
-        block_height = [int(height_q/3), int(height_q/3), int(height_q/3)]
+        block_height = [height_q/3, height_q/3, height_q/3]
     elif (height_q%3==1):
-        block_height = [int((height_q//3)+1), int(height_q//3), int(height_q//3)]
+        block_height = [(height_q//3)+1, height_q//3, height_q//3]
     else:
-        block_height = [int((height_q//3)+1), int(height_q//3), int((height_q//3)+1)]
-    
+        block_height = [(height_q//3)+1, height_q//3, (height_q//3)+1]
+
     if (width_q%3==0):
-        block_width = [int(width_q/3), int(width_q/3), int(width_q/3)]
+        block_width = [width_q/3, width_q/3, width_q/3]
     elif (width_q%3==1):
-        block_width = [int((width_q//3)+1), int(width_q//3), int(width_q//3)]
+        block_width = [(width_q//3)+1, width_q//3, width_q//3]
     else:
-        block_width = [int((width_q//3)+1), int(width_q//3), int((width_q//3)+1)]
+        block_width = [(width_q//3)+1, width_q//3, (width_q//3)+1]
 
     similarities = []
     p=0
@@ -192,26 +175,30 @@ def color_based_image_retrieval(query_image, database_images):
 
 if __name__ == "__main__":
     # Query image
-    query_image = Image.open("./static/datasets/2.jpg")
+    query_image = cv2.imread("7.jpg")
 
     # Database
-    database_images = [
-        Image.open("7.jpg")
-    ]
-    # database_images = []
-    # for img in glob.glob("./static/datasets/*.jpg"):
-    #     n = cv2.imread(img)
-    #     database_images.append(n)
+    # database_images = [
+    #     cv2.imread("7.jpg"),
+    #     cv2.imread("8.jpg"),
+    #     cv2.imread("9.jpg"),
+    #     cv2.imread("3549.jpg"),
+    #     cv2.imread("tes.jpg"),
+    # ]
+    database_images = []
+    for img in glob.glob("./static/datasets/*.jpg"):
+        n = cv2.imread(img)
+        database_images.append(n)
     start = time.time()
     result = color_based_image_retrieval(query_image, database_images)
     end =time.time()
     duration = end-start
     print(f'Time taken: {duration}')
     # display matches
-    # cv2.imshow("Query image", query_image)
-    # for i, (image, similarity) in enumerate(result):
-    #     cv2.imshow(f"Match {i + 1} - Similarity: {similarity:.2f}%", image)
+    cv2.imshow("Query image", query_image)
+    for i, (image, similarity) in enumerate(result):
+        cv2.imshow(f"Match {i + 1} - Similarity: {similarity:.2f}%", image)
 
 
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
