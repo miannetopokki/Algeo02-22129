@@ -1,3 +1,18 @@
+@keyframes glowing {
+  0% {
+    border-color: rgba(138, 34, 34, 0.795);
+    box-shadow: 0 0 10px rgba(138, 34, 34, 0.795);
+  }
+  50% {
+    border-color: rgba(138, 34, 34, 0.5);
+    box-shadow: 0 0 20px rgba(138, 34, 34, 0.5);
+  }
+  100% {
+    border-color: rgba(138, 34, 34, 0.795);
+    box-shadow: 0 0 10px rgba(138, 34, 34, 0.795);
+  }
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #E8E3E1;
@@ -217,20 +232,30 @@ input:checked + .slider:before {
 }
 
 .image-item img {
-  max-width: 100%; /* Gambar tidak melebihi lebar elemen */
-  max-height: 100%; /* Gambar tidak melebihi tinggi elemen */
-  width: auto; /* Lebar gambar otomatis disesuaikan */
-  height: auto; /* Tinggi gambar otomatis disesuaikan */
-  transition: transform 0.2s; /* Efek transisi pada transformasi */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: 5px solid rgba(138, 34, 34, 0.795);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: filter 0.3s;
 }
 
+.image-item img:hover {
+  animation: glowing 1s infinite;
+  border-color: rgba(138, 34, 34, 0.795);
+  box-shadow: 0 0 10px rgba(138, 34, 34, 0.795);
+  filter: brightness(1.2);
+}
 .image-item:hover img {
   transform: scale(1.2); /* Memperbesar gambar saat elemen di-hover */
   z-index: 1; /* Mengatur z-index untuk menampilkan di atas elemen lain */
   transition: transform 0.5s; /* Efek transisi yang lebih lambat */
 }
 .image-item:hover {
-  transform: scale(1.1); /* Membesarkan elemen saat dihover */
+  animation: glowing 1s infinite;
+  border-color: rgba(138, 34, 34, 0.795);
+  box-shadow: 0 0 10px rgba(138, 34, 34, 0.795);
 }
 .grid-container {
   margin: 0 auto; /* Mengatur kontainer grid ke tengah halaman */
@@ -293,9 +318,8 @@ input:checked + .slider:before {
 
 .similarity-text {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 10px; /* Menggeser teks ke atas */
+  right: 10px; /* Menggeser teks ke kanan */
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 5px;
@@ -303,7 +327,60 @@ input:checked + .slider:before {
   opacity: 0;
   transition: opacity 0.2s;
 }
-
 .image-item:hover .similarity-text {
   opacity: 1;
+}
+
+
+.image-item .delete-button {
+  opacity: 0; /* Tombol delete diatur menjadi transparan secara default */
+  transition: opacity 0.3s; /* Efek transisi ketika muncul */
+}
+
+.image-item:hover .delete-button {
+  opacity: 1; /* Tombol delete akan muncul saat elemen .image-item dihover */
+}
+
+.delete-button-container:hover .delete-button {
+  opacity: 1;
+}
+.image-hover:hover .delete-button-container {
+  opacity: 1;
+}
+
+
+.delete-button {
+  background-color: #ff6666; /* Warna latar belakang tombol */
+  color: #fff; /* Warna teks tombol */
+  border: none; /* Menghapus border */
+  padding: 10px 20px; /* Padding tombol (sesuaikan sesuai kebutuhan) */
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 0 auto; /* Mengatur tombol ke tengah */
+  font-size: 16px; /* Ukuran teks tombol */
+  border-radius: 5px; /* Border radius untuk tombol */
+  transition: background-color 0.3s; /* Efek transisi saat di-hover */
+}
+.delete-button-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+/* Gaya tombol "Hapus" saat di-hover */
+.delete-button:hover {
+  background-color: #ff3333; /* Warna latar belakang saat di-hover */
+}
+
+/* Gaya tombol "Hapus" saat diklik */
+.delete-button:active {
+  background-color: #ff0000; /* Warna latar belakang saat diklik */
 }
