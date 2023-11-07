@@ -213,8 +213,14 @@ def cosSimilarity(v1, v2):
 
 # ------------------------------------------------------------------ TEST CASE ------------------------------------------------------------------
 
-# vec_ref = imgToVector('albert.jpg')
-# vec_set = imgToVector('jokowi.jpeg')
+start = time.time()
 
-# similarity = 100 * cosSimilarity(vec_ref, vec_set)
-# print(f'similarity: {similarity}')
+vec_ref = imgToVector('7.jpg')
+vec_set = imgToVector('2.jpg')
+
+similarity = 100 * cosSimilarity(vec_ref, vec_set)
+end = time.time()
+duration = end-start
+
+print(f'Time taken: {duration}')
+print(f'similarity: {similarity}')
