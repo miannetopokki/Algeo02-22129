@@ -29,6 +29,19 @@ def about():
 
 @app.route('/use', methods=['GET', 'POST'])
 def use():
+    if 'image' in request.files:
+        imageKamera = request.files['image']
+        if imageKamera:
+            # Simpan gambar yang diterima di server (opsional)
+            file_path = os.path.join(app.config['DATASETS_FOLDER'], imageKamera.filename)
+            imageKamera.save(file_path)
+            messageunggah = "Berhasil diunggah!"
+            image_url = "static/datasets/" + imageKamera.filename
+            namafile = imageKamera.filename
+            # Simpan image_url dan namafile di sesi
+            session['image_url'] = image_url
+            session['namafile'] = namafile
+            # Lakukan pemrosesan gambar di sini (sesuaikan dengan kebutuhan Anda)
 
     #Fungsi Hapus Gambar
     if request.method == 'POST':
@@ -79,11 +92,6 @@ def use():
     image_url = None  # Tetapkan dengan nilai default
     namafile = None
     action = request.form.get('action')
-
-
-
-
-
 
     if action == "Reset":
         folder_path = os.path.join(os.path.dirname(__file__), 'static', 'filter')
@@ -142,7 +150,7 @@ def use():
             result = color_based_image_retrieval(query_image, database_images)
             end =time.time()
             duration = end-start
-            page_size = 20
+            page_size = 30
             page = int(request.args.get('page', 1))  # Halaman saat ini, defaultnya adalah halaman 1
             start_index = (page - 1) * page_size
             end_index = start_index + page_size

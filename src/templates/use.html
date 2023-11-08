@@ -49,30 +49,152 @@
             </div>
             <div class="flex-item">
                 <button id="kamera-button" class="search-button">Fitur Kamera</button>
+                <button id="matikan-kamera" class="search-button">Matikan Kamera</button>
 
+                
+                <div id="timer" class="text"></div>
                 <script>
                     const kameraButton = document.getElementById("kamera-button");
+                    const timerElement = document.getElementById("timer");
+
+                    // Cek apakah kamera sebelumnya aktif
+                    const isCameraActive = sessionStorage.getItem('kameraActive') === 'true';
+
+                    let captureInterval;
+                    let secondsLeft = 5;
 
                     kameraButton.addEventListener("click", () => {
-                        // Gunakan API getUserMedia untuk mengakses kamera
-                        if (navigator.mediaDevices.getUserMedia) {
-                            navigator.mediaDevices.getUserMedia({ video: true })
-                                .then(function (stream) {
-                                    // Anda dapat melakukan apa pun dengan aliran video, misalnya menampilkan aliran video di elemen video
-                                    const videoElement = document.createElement("video");
-                                    videoElement.srcObject = stream;
-                                    videoElement.autoplay = true;
-                                    kameraButton.parentElement.appendChild(videoElement); // Menambahkan elemen video ke kontainer
-                                })
-                                .catch(function (error) {
-                                    console.error("Gagal mengakses kamera: " + error);
-                                });
-                        } else {
-                            alert("Peramban Anda tidak mendukung akses kamera.");
+                        if (!isCameraActive) {
+                            // Gunakan API getUserMedia untuk mengakses kamera
+                            if (navigator.mediaDevices.getUserMedia) {
+                                navigator.mediaDevices.getUserMedia({ video: true })
+                                    .then(function (stream) {
+                                        const videoElement = document.createElement("video");
+                                        videoElement.srcObject = stream;
+                                        videoElement.autoplay = true;
+                                        kameraButton.parentElement.appendChild(videoElement);
+
+                                        // Munculkan timer
+                                        timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                                        // Atur interval untuk mengambil dan mengirim gambar setiap 5 detik
+                                        captureInterval = setInterval(function () {
+                                            secondsLeft--;
+                                            timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                                            if (secondsLeft <= 0) {
+                                                captureAndSendImage();
+                                                timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik. Halaman akan dimuat ulang.`;
+                                                setTimeout(() => {
+                                                    location.reload();
+                                                }, 1000);
+                                                secondsLeft = 5;
+                                                timerElement.textContent = `Gambar diambil! Berikutnya dalam ${secondsLeft} detik`;
+                                            }
+                                        }, 1000);
+
+                                        // Setel status kamera dalam sessionStorage
+                                        sessionStorage.setItem('kameraActive', 'true');
+                                    })
+                                    .catch(function (error) {
+                                        console.error("Gagal mengakses kamera: " + error);
+                                    });
+                            } else {
+                                alert("Peramban Anda tidak mendukung akses kamera.");
+                            }
                         }
                     });
-                    </script>
+
+                    // Di bawah kode di atas, Anda dapat menambahkan:
+                    if (isCameraActive) {
+                    // Matikan kamera jika sedang aktif
+                    const videoElements = document.querySelectorAll('video');
+                    videoElements.forEach((videoElement) => {
+                        videoElement.srcObject.getTracks().forEach((track) => {
+                            track.stop();
+                        });
+                        videoElement.parentNode.removeChild(videoElement);
+                    });
+
+                    // Menghidupkan kamera kembali
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function (stream) {
+                            const videoElement = document.createElement("video");
+                            videoElement.srcObject = stream;
+                            videoElement.autoplay = true;
+                            kameraButton.parentElement.appendChild(videoElement);
+
+                            // Munculkan timer
+                            timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                            // Atur interval untuk mengambil dan mengirim gambar setiap 5 detik
+                            captureInterval = setInterval(function () {
+                                secondsLeft--;
+                                timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                                if (secondsLeft <= 0) {
+                                    captureAndSendImage();
+                                    timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik. Halaman akan dimuat ulang.`;
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1000);
+                                    secondsLeft = 5;
+                                    timerElement.textContent = `Gambar diambil! Berikutnya dalam ${secondsLeft} detik`;
+                                }
+                            }, 1000);
+                        })
+                        .catch(function (error) {
+                            console.error("Gagal mengakses kamera: " + error);
+                        });
+                }
+
+                    // Fungsi untuk mengambil gambar dan mengirimkannya ke server
+                    function captureAndSendImage() {
+                        const canvas = document.createElement('canvas');
+                        const video = document.querySelector('video');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        const imageBlob = canvas.toBlob(async (blob) => {
+                            const formData = new FormData();
+                            newCapture = 'captured_image.png'
+                            formData.append('image', blob, newCapture);
+
+                            // Kirim gambar ke server menggunakan fetch
+                            await fetch('/use', {
+                                method: 'POST',
+                                body: formData,
+                            });
+                        }, 'image/png');
+                    }
+                    const matikanKameraButton = document.getElementById("matikan-kamera");
+
+                    matikanKameraButton.addEventListener("click", () => {
+                        // Hentikan kamera jika sedang aktif
+                        if (isCameraActive) {
+                            const videoElements = document.querySelectorAll('video');
+                            videoElements.forEach((videoElement) => {
+                                const stream = videoElement.srcObject;
+                                const tracks = stream.getTracks();
+                                tracks.forEach((track) => {
+                                    track.stop();
+                                });
+
+                                // Hapus elemen video
+                                videoElement.srcObject = null;
+                                videoElement.parentNode.removeChild(videoElement);
+                            });
+
+                            // Setel status kamera dalam sessionStorage menjadi tidak aktif
+                            sessionStorage.setItem('kameraActive', 'false');
+                        }
+                    });
+
                 
+
+                </script>
+
 
             </div>
             <div class="flex-item">
