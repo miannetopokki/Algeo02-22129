@@ -11,24 +11,30 @@ def convert_rgb_to_hsv(image):
     # original method
     image = image[:,:,::-1]
     image_mat = image/255
+
+    # pisah channel rgb
     r=image_mat[:,:,0]
     g=image_mat[:,:,1]
     b=image_mat[:,:,2]
+
+    # hitung cmax, cmin, dan delta
     cmax=np.max(image_mat, axis=2)
     cmin=np.min(image_mat, axis=2)
     delta=(cmax-cmin)
     h = np.zeros_like(r)
     s = np.zeros_like(r)
+
     mask_r = np.logical_and(delta!=0, cmax==r)
     mask_g = np.logical_and(delta!=0, cmax==g)
     mask_b = np.logical_and(delta!=0, cmax==b)
 
-    
+    # hitung nilai H
     h[delta==0] = 0
     h[mask_r] = 60*(((g[mask_r]-b[mask_r])/(delta[mask_r]))%6)
     h[mask_g] = 60*(((b[mask_g]-r[mask_g])/(delta[mask_g]))+2)
     h[mask_b] = 60*(((r[mask_b]-g[mask_b])/(delta[mask_b]))+4)
 
+    # hitung nilai S
     nonzero_mask = cmax != 0
     s[nonzero_mask] = delta[nonzero_mask] / cmax[nonzero_mask]
 
@@ -65,7 +71,6 @@ def quantify(h,s,v):
 
 #ini metode yang ada di spesifikasi
 def cosine_similarity(vector1, vector2):
-
     dot_product = np.dot(vector1, vector2)
     norm_vector1 = np.linalg.norm(vector1)
     norm_vector2 = np.linalg.norm(vector2)
