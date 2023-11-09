@@ -36,6 +36,10 @@ header {
   align-items: stretch;
 }
 .container {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   max-width: 800px;
   max-height: 400px;
   padding: 1px;
