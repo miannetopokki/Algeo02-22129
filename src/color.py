@@ -37,7 +37,6 @@ def convert_rgb_to_hsv(image):
     # hitung nilai S
     nonzero_mask = cmax != 0
     s[nonzero_mask] = delta[nonzero_mask] / cmax[nonzero_mask]
-
     v = cmax
 
     h,s,v = quantify(h,s,v)
@@ -50,20 +49,20 @@ def quantify(h,s,v):
 
     #numpy method
     
+    h[np.logical_and(h>=0, h<=25)] = 1
     h[h>=316] = 0
-    h[np.logical_and(h>=1, h<=25)] = 1
     h[np.logical_and(h>25, h<=40)] = 2
     h[np.logical_and(h>40, h<=120)] = 3
     h[np.logical_and(h>120, h<=190)] = 4
     h[np.logical_and(h>190, h<=270)] = 5
     h[np.logical_and(h>270, h<=295)] = 6
     h[np.logical_and(h>295, h<=315)] = 7
-    s[s<0.2] = 0
-    s[np.logical_and(s>=0.2, s<0.7)] = 1
     s[s>=0.7] = 2
-    v[v<0.2] = 0
-    v[np.logical_and(v>=0.2, v<0.7)] = 1
+    s[np.logical_and(s>=0.2, s<0.7)] = 1
+    s[s<0.2] = 0
     v[v>=0.7] = 2
+    v[np.logical_and(v>=0.2, v<0.7)] = 1
+    v[v<0.2] = 0
 
     return h,s,v
             
@@ -81,24 +80,24 @@ def histogram(hsv):
     #numpy method
     
     # Define the H, S, and V thresholds
-    h_thresholds = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-    s_thresholds = [0, 1, 2, 3]
-    v_thresholds = [0, 1, 2, 3]
+    h_thresholds = [0, 1, 2, 3, 4, 5, 6, 7]
+    s_thresholds = [0, 1, 2]
+    v_thresholds = [0, 1, 2]
 
     # Initialize histograms for H, S, and V
-    h_histogram = np.zeros(len(h_thresholds) - 1, dtype=int)
-    s_histogram = np.zeros(len(s_thresholds) - 1, dtype=int)
-    v_histogram = np.zeros(len(v_thresholds) - 1, dtype=int)
+    h_histogram = np.zeros(len(h_thresholds), dtype=object)
+    s_histogram = np.zeros(len(s_thresholds), dtype=object)
+    v_histogram = np.zeros(len(v_thresholds), dtype=object)
 
     # Apply thresholds and compute histograms
-    for i in range(len(h_thresholds) - 1):
-        h_mask = (hsv[:, :, 0] >= h_thresholds[i]) & (hsv[:, :, 0] < h_thresholds[i + 1])
+    for i in range(len(h_thresholds)):
+        h_mask = (hsv[:, :, 0] == h_thresholds[i])
         h_histogram[i] = np.count_nonzero(h_mask)
 
-    for i in range(len(s_thresholds) - 1):
-        s_mask = (hsv[:, :, 1] >= s_thresholds[i]) & (hsv[:, :, 1] < s_thresholds[i + 1])
+    for i in range(len(s_thresholds)):
+        s_mask = (hsv[:, :, 1] == s_thresholds[i])
         s_histogram[i] = np.count_nonzero(s_mask)
-        v_mask = (hsv[:, :, 2] >= v_thresholds[i]) & (hsv[:, :, 2] < v_thresholds[i + 1])
+        v_mask = (hsv[:, :, 2] == v_thresholds[i])
         v_histogram[i] = np.count_nonzero(v_mask)
     hist = np.concatenate((h_histogram,s_histogram,v_histogram))
 
@@ -140,15 +139,12 @@ def pencarian_blok(query,database):
     similarities = []
     p=0
     r=0
-    # k=1
     for i in range(0, height_q, block_height_q[p]):
         q=0
         s=0
         for j in range(0, width_q, block_width_q[q]):
             block_query = query[i:i+block_height_q[p], j:j+block_width_q[q]]
             block_database = database[r:r+block_height_db[p], s:s+block_width_db[q]]
-            # print(k)
-            # k+=1
             hist_query = histogram(block_query)
             hist_db = histogram(block_database)
             similarity = cosine_similarity(hist_query, hist_db)
@@ -161,11 +157,8 @@ def pencarian_blok(query,database):
 
     average_similarity = np.mean(similarities)
     
-    #Kalau metode ori perlu diconvert ke persen
     similarity_percentage = (average_similarity)*100
     
-    #Metode referensi langsung aja
-    #similarity_percentage = 100-average_similarity
 
     return similarity_percentage
 
@@ -186,20 +179,19 @@ def color_based_image_retrieval(query_image, database_images):
 
     return matches
 
+# test case
+
 if __name__ == "__main__":
     # Query image
-    query_image = cv2.imread("./static/datasets/7.jpg")
-    # query_image = Image.open("./static/datasets/2.jpg")
+    query_image = cv2.imread("./static/uploads/tes2.jpeg")
 
-    # Database
-    # database_images = [
-    #     cv2.imread("2.jpg")
-    #     # Image.open("7.jpg")
-    # ]
-    database_images = []
-    for img in glob.glob("./static/datasets/*.jpg"):
-        n = cv2.imread(img)
-        database_images.append(n)
+    # load database
+    imdir = './static/uploads/' #folder file
+    ext = ['jpg', 'jpeg'] #format gambar
+    files = []
+    [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
+    database_images = [cv2.imread(file) for file in files]
+
     start = time.time()
     result = color_based_image_retrieval(query_image, database_images)
     end =time.time()
