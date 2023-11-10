@@ -9,18 +9,31 @@
 </head>
 
 <body style="background-color: #ffffff;">
-    <header style="background-color: #ffffff;">
+    <header style="background-color: #c2abab48;">
         <h1 class="text" style="color: blueviolet;">Reverse Image Search</h1>
     </header>
+    <div class="container-atas">
+        <a href = '/' style="text-decoration: none; color: inherit;" >
+            <div class="container">
+                <h3 class="text">HOME</h3>
+            </div>
+        </a>
+        <a href = '/about' style="text-decoration: none; color: inherit;" >
+            <div class="container">
+                <h3 class="text">ABOUT</h3>
+            </div>
+        </a>
+    </div>
     <div class="flex-container">
         <div class="flex-item-image">
             <img src="{{ image_url }}" alt="Uploaded Image"> <!-- Tambahkan elemen img dengan src yang sesuai -->
+
         </div>
         <div class="flex-item-vert flex-container-vertical">
             <div class="flex-item">
-                <h2 class="text">Upload foto</h2>
+                <h2 class="text">Upload Dataset (Image)</h2>
                 
-                <form method="POST" enctype="multipart/form-data" action="/use">
+                <form method="POST" enctype="multipart/form-data" action="/use" class="search-button">
                     <input type="file" name="file">
                     <input type="submit" name = "action" value="Unggah">
                 </form>
@@ -42,48 +55,197 @@
                 </div>
                 <div class="flex-item">
                     <form action="/use" method="POST">
-                        <button type="submit" class="search-button" name = "action" value="Search">Search</button>
+                        <button type="submit" class="search-button" name = "action" value="Search">SearchColor</button>
+                        <button type="submit" class="search-button" name = "action" value="SearchTexture">SearchTexture</button>
                         <button type="submit" class="search-button" name = "action" value="Reset">Reset</button>
                     </form>
                 </div>
             </div>
             <div class="flex-item">
                 <button id="kamera-button" class="search-button">Fitur Kamera</button>
+                <button id="matikan-kamera" class="search-button">Matikan Kamera</button>
 
+                
+                <div id="timer" class="text"></div>
                 <script>
                     const kameraButton = document.getElementById("kamera-button");
+                    const timerElement = document.getElementById("timer");
+
+                    // Cek apakah kamera sebelumnya aktif
+                    const isCameraActive = sessionStorage.getItem('kameraActive') === 'true';
+
+                    let captureInterval;
+                    let secondsLeft = 5;
 
                     kameraButton.addEventListener("click", () => {
-                        // Gunakan API getUserMedia untuk mengakses kamera
-                        if (navigator.mediaDevices.getUserMedia) {
-                            navigator.mediaDevices.getUserMedia({ video: true })
-                                .then(function (stream) {
-                                    // Anda dapat melakukan apa pun dengan aliran video, misalnya menampilkan aliran video di elemen video
-                                    const videoElement = document.createElement("video");
-                                    videoElement.srcObject = stream;
-                                    videoElement.autoplay = true;
-                                    kameraButton.parentElement.appendChild(videoElement); // Menambahkan elemen video ke kontainer
-                                })
-                                .catch(function (error) {
-                                    console.error("Gagal mengakses kamera: " + error);
-                                });
-                        } else {
-                            alert("Peramban Anda tidak mendukung akses kamera.");
+                        if (!isCameraActive) {
+                            // Gunakan API getUserMedia untuk mengakses kamera
+                            if (navigator.mediaDevices.getUserMedia) {
+                                navigator.mediaDevices.getUserMedia({ video: true })
+                                    .then(function (stream) {
+                                        const videoElement = document.createElement("video");
+                                        videoElement.srcObject = stream;
+                                        videoElement.autoplay = true;
+                                        kameraButton.parentElement.appendChild(videoElement);
+
+                                        // Munculkan timer
+                                        timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                                        // Atur interval untuk mengambil dan mengirim gambar setiap 5 detik
+                                        captureInterval = setInterval(function () {
+                                            secondsLeft--;
+                                            timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                                            if (secondsLeft <= 0) {
+                                                captureAndSendImage();
+                                                timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik. Halaman akan dimuat ulang.`;
+                                                setTimeout(() => {
+                                                    location.reload();
+                                                }, 1000);
+                                                secondsLeft = 5;
+                                                timerElement.textContent = `Gambar diambil! Berikutnya dalam ${secondsLeft} detik`;
+                                            }
+                                        }, 1000);
+
+                                        // Setel status kamera dalam sessionStorage
+                                        sessionStorage.setItem('kameraActive', 'true');
+                                    })
+                                    .catch(function (error) {
+                                        console.error("Gagal mengakses kamera: " + error);
+                                    });
+                            } else {
+                                alert("Peramban Anda tidak mendukung akses kamera.");
+                            }
                         }
                     });
-                    </script>
+
+                    // Di bawah kode di atas, Anda dapat menambahkan:
+                    if (isCameraActive) {
+                    // Matikan kamera jika sedang aktif
+                    const videoElements = document.querySelectorAll('video');
+                    videoElements.forEach((videoElement) => {
+                        videoElement.srcObject.getTracks().forEach((track) => {
+                            track.stop();
+                        });
+                        videoElement.parentNode.removeChild(videoElement);
+                    });
+
+                    // Menghidupkan kamera kembali
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function (stream) {
+                            const videoElement = document.createElement("video");
+                            videoElement.srcObject = stream;
+                            videoElement.autoplay = true;
+                            kameraButton.parentElement.appendChild(videoElement);
+
+                            // Munculkan timer
+                            timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                            // Atur interval untuk mengambil dan mengirim gambar setiap 5 detik
+                            captureInterval = setInterval(function () {
+                                secondsLeft--;
+                                timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik`;
+
+                                if (secondsLeft <= 0) {
+                                    captureAndSendImage();
+                                    timerElement.textContent = `Gambar akan diambil dalam ${secondsLeft} detik. Halaman akan dimuat ulang.`;
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1000);
+                                    secondsLeft = 5;
+                                    timerElement.textContent = `Gambar diambil! Berikutnya dalam ${secondsLeft} detik`;
+                                }
+                            }, 1000);
+                        })
+                        .catch(function (error) {
+                            console.error("Gagal mengakses kamera: " + error);
+                        });
+                }
+
+                    // Fungsi untuk mengambil gambar dan mengirimkannya ke server
+                    function captureAndSendImage() {
+                        const canvas = document.createElement('canvas');
+                        const video = document.querySelector('video');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        const imageBlob = canvas.toBlob(async (blob) => {
+                            const formData = new FormData();
+                            newCapture = 'captured_image.jpg'
+                            formData.append('image', blob, newCapture);
+
+                            // Kirim gambar ke server menggunakan fetch
+                            await fetch('/use', {
+                                method: 'POST',
+                                body: formData,
+                            });
+                        }, 'image/png');
+                    }
+                    const matikanKameraButton = document.getElementById("matikan-kamera");
+
+                    matikanKameraButton.addEventListener("click", () => {
+                        // Hentikan kamera jika sedang aktif
+                        if (isCameraActive) {
+                            const videoElements = document.querySelectorAll('video');
+                            videoElements.forEach((videoElement) => {
+                                const stream = videoElement.srcObject;
+                                const tracks = stream.getTracks();
+                                tracks.forEach((track) => {
+                                    track.stop();
+                                });
+
+                                // Hapus elemen video
+                                videoElement.srcObject = null;
+                                videoElement.parentNode.removeChild(videoElement);
+                            });
+
+                            // Setel status kamera dalam sessionStorage menjadi tidak aktif
+                            sessionStorage.setItem('kameraActive', 'false');
+                        }
+                    });
+
                 
 
+                </script>
+
+
             </div>
+            {% if result%}
             <div class="flex-item">
-                <h2 class="text">Waktu : {{durasi}}</h2>
+                <h2 class="text">{{countfilter}} Result </h2>
+                <h2 class="text">Waktu : {{ durasi }} detik</h2>
             </div>
+            {% endif %}
         </div>
     </div>
     <hr style="border: 1px solid #ccc; margin: 20px 0;"> <!-- Menggunakan style untuk garis separator -->
-    <div style="color: blueviolet; padding: 20px;">
+    {% if result%}
+    <div style="color: blueviolet; padding: 20px;" class="flex-item">
+        <h2>--Searching {{namafile}} with {{searchType}} parameter -- </h2>
         <h2>Result: </h2>
     </div>
+    {% endif %}
+    {%if result%}
+    <div class="grid-container-result">
+        
+        <div class="image-grid-result">
+            {% for image in image_list %}
+                <div class="image-item">
+                    <div class="image-hover">
+                        <img src="{{ image }}" alt="Image">
+                        <div class="delete-button-container">
+                            <form method="POST" action="/use">
+                                <input type="hidden" name="image_path" value="{{ image }}">
+                            </form>
+                        </div>
+                    </div>  
+                    <h2 class="similarity-text">Similarity : {{ result[loop.index - 1][1] }}</h2>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
     <div class="grid-container">
         <div class="image-grid">
             {% for image in image_list %}
@@ -104,8 +266,8 @@
             {% endfor %}
         </div>
     </div>
-      
-      <div class="pagination">
+    {%endif%}
+    <div class="pagination">
         {% if current_page > 1 %}
             <a class="pagination-button" href="?page={{ current_page - 1 }}">Previous</a>
         {% endif %}
@@ -119,6 +281,7 @@
             <a class = "pagination-button"href="?page={{ page_num }}">{{ page_num }}</a>
         {% endfor %}
     </div>
+ 
     
     
       

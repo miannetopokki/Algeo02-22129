@@ -29,19 +29,28 @@ header {
   padding: 1px;
 }
 
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #19747E;
-  border-radius: 20px;
+.container-atas{
   display: flex;
-  justify-content: center; /* Horizontally center */
-  align-items: center; /* Vertically center */
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
 }
+.container {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 800px;
+  max-height: 400px;
+  padding: 1px;
+  background-color: #48959e3b;
+  border-radius: 20px;
+
+}
+
 .container:hover {
   background-color: #19747e7a;
+
 }
 .text{
   color: rgba(22, 14, 90, 0.993)
@@ -95,13 +104,14 @@ a:hover {
   text-align: center;
   margin: 20px;
   border-radius: 10px;
+  height: 500px;
+  align-items: center;
+ 
 }
-
+.flex-item-image img{
+  align-items: center;
+}
 /* Untuk gambar di dalam .flex-item-image */
-.flex-item-image img {
-  max-width: 100%;
-  max-height: 100%;
-}
 .flex-container-vertical {
 flex-direction: column;
 
@@ -217,14 +227,21 @@ input:checked + .slider:before {
 
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Mengatur jumlah kolom dan lebar setiap kolom */
+  grid-template-columns: repeat(4, 1fr); /* Mengatur jumlah kolom dan lebar setiap kolom */
+  gap: 20px; /* Jarak antara item dalam grid */
+  margin: 2px 0; /* Margin atas dan bawah grid */
+  padding: 20px;
+}
+.image-grid-result {
+  display: grid;
+  grid-template-columns: repeat(8, 2fr); /* Mengatur jumlah kolom dan lebar setiap kolom */
   gap: 50px; /* Jarak antara item dalam grid */
   margin: 2px 0; /* Margin atas dan bawah grid */
   padding: 20px;
 }
 
 .image-item {
-  width: 100%; /* Item gambar 100% lebar dari parentnya */
+  /* Item gambar 100% lebar dari parentnya */
   position: relative;
   overflow: visible; /* Mengizinkan gambar melampaui batas elemen */
   background-color: #90a1b3;
@@ -261,7 +278,10 @@ input:checked + .slider:before {
   margin: 0 auto; /* Mengatur kontainer grid ke tengah halaman */
   max-width: 1200px; /* Mengatur lebar maksimum kontainer (sesuaikan sesuai kebutuhan) */
 }
-
+.grid-container-result {
+  margin: 0 auto; /* Mengatur kontainer grid ke tengah halaman */
+  max-width: 2500px; /* Mengatur lebar maksimum kontainer (sesuaikan sesuai kebutuhan) */
+}
 /* Gaya dasar tombol pagination */
 .pagination {
   display: flex;
