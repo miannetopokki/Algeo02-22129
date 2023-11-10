@@ -32,6 +32,8 @@ def about():
 
 @app.route('/use', methods=['GET', 'POST'])
 def use():
+    if 'isScrape' not in session:  # Periksa apakah 'var' sudah ada di sesi
+        session['isScrape'] = False
     if 'image' in request.files:
         imageKamera = request.files['image']
         if imageKamera:
