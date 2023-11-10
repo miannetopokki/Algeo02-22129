@@ -172,7 +172,7 @@ def color_based_image_retrieval(query_image, database_images):
         db_image = convert_rgb_to_hsv(image)
         similarity = pencarian_blok(query_image,db_image)
         if (similarity>=60):
-            matches.append((image, similarity))
+            matches.append((image, round(similarity,2)))
 
     # Mengurutkan citra berdasarkan tingkat kesamaan
     matches.sort(key=lambda x: x[1], reverse=True)

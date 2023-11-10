@@ -7,10 +7,12 @@ import glob
 import cv2
 from color import color_based_image_retrieval
 from CBIRtexture import imgToVector,cosSimilarity
+from scrape import scrape_images
 
 app = Flask(__name__, static_folder='static')
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
 app.config['DATASETS_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'datasets')
+app.config['DATASETSCRAP_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'datasetscrap')
 app.config['FILTER_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static')
 app.secret_key = 'keyjangandigantiplisdarihugo'  #buat save session kalo ganti page
 
@@ -76,26 +78,57 @@ def use():
     #DEKLARASI AWAL==============
     # Menampilkan maksimum 6 gambar per halaman
     page_size = 12
+    
     page = int(request.args.get('page', 1))  # Halaman saat ini, defaultnya adalah halaman 1
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
     # Path ke direktori datasets di dalam folder static
-
+   
     dataset_dir = app.config['DATASETS_FOLDER']
     # Mengambil daftar file gambar dalam direktori datasets
     image_list = [os.path.join('static', 'datasets', filename) for filename in os.listdir(dataset_dir) if filename.endswith(('.jpg', '.png', '.jpeg'))]
     # Mengambil daftar gambar untuk halaman saat ini
-
     current_images = image_list[start_index:end_index]
     num_pages = math.ceil(len(image_list) / page_size)
-    image_list = []
+
+    # image_list = []
     messageunggah = ""
     image_url = None  # Tetapkan dengan nilai default
     namafile = None
     action = request.form.get('action')
+    if action == "SubmitLink":
+        inputLink = request.form['inputLinkScrap']
+        scrape_images(inputLink)
+
+
+    #Status Scrap
+    if action == 'Scrap':
+        session['isScrape'] = True
+    elif action == 'stopScrape':
+        session['isScrape'] = False
+
+    if(session['isScrape'] == True):
+        datasetscrap_dir = app.config['DATASETSCRAP_FOLDER']
+        image_list_scrap = [os.path.join('static', 'datasetscrap', filename) for filename in os.listdir(datasetscrap_dir) if filename.endswith(('.jpg', '.png', '.jpeg'))]
+        combinedListImage = image_list + image_list_scrap
+        current_images = combinedListImage[start_index:end_index]
+        num_pages = math.ceil(len(combinedListImage) / page_size)
+
 
     if action == "Reset":
         folder_path = os.path.join(os.path.dirname(__file__), 'static', 'filter')
+        try :
+            session['image_url'] = None
+            session['namafile'] = None
+            for filename in os.listdir(folder_path):
+                file_path = os.path.join(folder_path,filename)
+                if os.path.isfile(file_path) and (filename.lower().endswith('.jpg') or filename.lower().endswith('.png')):
+                    os.remove(file_path)
+            print("Semua file gambar (.jpg dan .png) dalam folder berhasil dihapus.")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {str(e)}")
+    if action == "deleteScrap":
+        folder_path = os.path.join(os.path.dirname(__file__), 'static', 'datasetscrap')
         try :
             session['image_url'] = None
             session['namafile'] = None
@@ -135,7 +168,7 @@ def use():
         messageunggah = session.get('messageunggah')
         image_url = session.get('image_url')
         namafile = session.get('namafile')
-        return render_template('use.html', unggah=messageunggah, image_url=image_url, namafile=namafile, image_list=current_images, num_pages=num_pages, current_page=page)
+        return render_template('use.html', unggah=messageunggah, image_url=image_url, namafile=namafile, image_list=current_images, num_pages=num_pages, current_page=page, isScrape = session['isScrape'])
             
 
 
@@ -146,9 +179,16 @@ def use():
         image_url = session.get('image_url')
         if (image_url != None):
             query_image = cv2.imread(image_url)
-            for img in glob.glob("./static/datasets/*.jpg"):
-                n = cv2.imread(img)
-                database_images.append(n)
+            if (session['isScrape'] == True):
+                for img in glob.glob("./static/datasets/*.jpg") + glob.glob("./static/datasetscrap/*.jpg"):
+                    n = cv2.imread(img)
+                    database_images.append(n)
+            else:
+
+                for img in glob.glob("./static/datasets/*.jpg"):
+                    n = cv2.imread(img)
+                    database_images.append(n)
+
             start = time.time()
             result = color_based_image_retrieval(query_image, database_images)
             end =time.time()
@@ -180,7 +220,7 @@ def use():
             session['jenissearch'] = "Color"
             jenissearch = session.get('jenissearch')
             duration = round(duration,2)
-            return render_template('use.html',searchType = jenissearch, countfilter = countFiltered,unggah=messageunggah, image_url=image_url, namafile=namafile, result =filteredImages ,image_list=current_images, num_pages=1, current_page=1, durasi=duration)
+            return render_template('use.html',searchType = jenissearch, countfilter = countFiltered,unggah=messageunggah, image_url=image_url, namafile=namafile, result =filteredImages ,image_list=current_images, num_pages=1, current_page=1, durasi=duration, isScrape = session['isScrape'])
         
 
         else:
@@ -196,11 +236,20 @@ def use():
         if (image_url != None): #ada fotonya
             vec_ref = imgToVector(image_url)
             start = time.time()
-            for img in glob.glob("./static/datasets/*.jpg"):
-                vec_set = imgToVector(img)
-                similarity = 100 * cosSimilarity(vec_ref,vec_set)
-                n = cv2.imread(img)
-                result.append((n,similarity))
+            if (session['isScrape'] == True):
+                for img in glob.glob("./static/datasets/*.jpg") + glob.glob(".static/datasetscrap/*.jpg"):
+                    vec_set = imgToVector(img)
+                    similarity = 100 * cosSimilarity(vec_ref,vec_set)
+                    n = cv2.imread(img)
+                    result.append((n,similarity))
+            else:
+
+                for img in glob.glob("./static/datasets/*.jpg"):
+                    vec_set = imgToVector(img)
+                    similarity = 100 * cosSimilarity(vec_ref,vec_set)
+                    n = cv2.imread(img)
+                    result.append((n,similarity))
+
             end =time.time()
 
             duration = end-start
@@ -231,22 +280,25 @@ def use():
             jenissearch = session.get('jenissearch')
             messageunggah = session.get('messageunggah')
             duration = round(duration,2)
-            return render_template('use.html', searchType = jenissearch ,countfilter = countFiltered,unggah=messageunggah, image_url=image_url, namafile=namafile, result =filteredImages ,image_list=current_images, num_pages=1, current_page=1, durasi=duration)
+            return render_template('use.html', searchType = jenissearch ,countfilter = countFiltered,unggah=messageunggah, image_url=image_url, namafile=namafile, result =filteredImages ,image_list=current_images, num_pages=1, current_page=1, durasi=duration, isScrape = session['isScrape'])
 
 
         else:
             session['messageunggah'] = "Error! Anda mau search apa wkwkwk"
             messageunggah = session.get('messageunggah')
             
-
-
-
-
+   
+        
     image_url = session.get('image_url')
     messageunggah = session.get('messageunggah')
     namafile = session.get('namafile')
     enablePages = "True"
-    return render_template('use.html', unggah=messageunggah, image_url=image_url, namafile=namafile, image_list=current_images, num_pages=num_pages, current_page=page,enablepage = enablePages)
+
+
+
+
+
+    return render_template('use.html', unggah=messageunggah, image_url=image_url, namafile=namafile, image_list=current_images, num_pages=num_pages, current_page=page,enablepage = enablePages, isScrape = session['isScrape'])
 
 if __name__ == '__main__':
     app.run()

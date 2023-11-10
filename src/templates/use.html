@@ -58,6 +58,7 @@
                         <button type="submit" class="search-button" name = "action" value="Search">SearchColor</button>
                         <button type="submit" class="search-button" name = "action" value="SearchTexture">SearchTexture</button>
                         <button type="submit" class="search-button" name = "action" value="Reset">Reset</button>
+                        
                     </form>
                 </div>
             </div>
@@ -210,6 +211,21 @@
                 </script>
 
 
+            </div>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <form action="/use" method="POST">
+                        <button type="submit" class="search-button" name = "action" value="Scrap">Show Scrap</button>
+                        <button type="submit" class="search-button" name = "action" value="stopScrape">Hide Scrap</button>
+                        <button type="submit" class="search-button" name = "action" value="deleteScrap">Delete Database scrap</button>
+                    </form>
+                    <form action="/use" method="POST">
+                        <label for="inputText">Masukkan link:</label>
+                        <input type="text" id="inputText" name="inputLinkScrap">
+                        <input type="submit" name = "action" value="SubmitLink">
+                    </form>
+                    <h2>Scrap status : {{isScrape}}</h2>
+                </div>
             </div>
             {% if result%}
             <div class="flex-item">
