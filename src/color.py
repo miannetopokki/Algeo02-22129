@@ -183,11 +183,11 @@ def color_based_image_retrieval(query_image, database_images):
 
 if __name__ == "__main__":
     # Query image
-    query_image = cv2.imread("./static/uploads/tes2.jpeg")
+    query_image = cv2.imread("./static/datasets/bg.png")
 
     # load database
-    imdir = './static/uploads/' #folder file
-    ext = ['jpg', 'jpeg'] #format gambar
+    imdir = './static/datasets/' #folder file
+    ext = ['jpg', 'jpeg', 'png'] #format gambar
     files = []
     [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
     database_images = [cv2.imread(file) for file in files]
