@@ -104,11 +104,15 @@ a:hover {
   text-align: center;
   margin: 20px;
   border-radius: 10px;
-  height: 500px;
+  height: 650px;
   align-items: center;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.397);
  
 }
 .flex-item-image img{
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.7);
   align-items: center;
 }
 /* Untuk gambar di dalam .flex-item-image */
@@ -141,6 +145,14 @@ background-color: white;
   color: white;
   border-radius: 5px;
   padding: 5px 10px; /* Sesuaikan dengan kebutuhan Anda */
+  margin: auto; /* Mengatur margin secara otomatis untuk mengatur tombol di tengah */
+}
+.reset-button {
+  display: inline-block;
+  background-color: blueviolet;
+  color: white;
+  border-radius: 5px;
+  padding: 25px 25px; /* Sesuaikan dengan kebutuhan Anda */
   margin: auto; /* Mengatur margin secara otomatis untuk mengatur tombol di tengah */
 }
 
@@ -244,7 +256,7 @@ input:checked + .slider:before {
   /* Item gambar 100% lebar dari parentnya */
   position: relative;
   overflow: visible; /* Mengizinkan gambar melampaui batas elemen */
-  background-color: #90a1b3;
+  background-color: #ffffff;
   transition: transform 0.2s; /* Efek transisi pada transformasi */
 }
 
@@ -310,7 +322,7 @@ input:checked + .slider:before {
   border-radius: 4px; /* Menambahkan border radius ke tombol aktif */
 }
 .pagination-button {
-  background-color: #6d6d6d;
+  background: linear-gradient(to right, #dad8d7, #7575b680);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -370,14 +382,14 @@ input:checked + .slider:before {
 
 
 .delete-button {
-  background-color: #ff6666; /* Warna latar belakang tombol */
+  background-color: #ff66665b; /* Warna latar belakang tombol */
   color: #fff; /* Warna teks tombol */
   border: none; /* Menghapus border */
   padding: 10px 20px; /* Padding tombol (sesuaikan sesuai kebutuhan) */
   text-align: center;
   text-decoration: none;
   display: block;
-  margin: 0 auto; /* Mengatur tombol ke tengah */
+  margin: 10px 15px; /* Mengatur tombol ke tengah */
   font-size: 16px; /* Ukuran teks tombol */
   border-radius: 5px; /* Border radius untuk tombol */
   transition: background-color 0.3s; /* Efek transisi saat di-hover */
@@ -385,13 +397,15 @@ input:checked + .slider:before {
 .delete-button-container {
   position: absolute;
   top: 0;
+  justify-content: center;
+  align-items: center;
   left: 0;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
+ 
+ 
+  background-color: rgba(0, 0, 0, 0.397);
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -403,4 +417,31 @@ input:checked + .slider:before {
 /* Gaya tombol "Hapus" saat diklik */
 .delete-button:active {
   background-color: #ff0000; /* Warna latar belakang saat diklik */
+}
+
+
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInUp 0.2s ease forwards, zoomIn 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+      transform: scale(0.8);
+  }
+  to {
+      transform: scale(1);
+  }
 }

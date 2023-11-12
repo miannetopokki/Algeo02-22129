@@ -3,10 +3,9 @@
 
 <head>
     <title>Home</title>
-
-    <!-- Latest compiled and minified Bootstrap CSS -->
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/stylemain.css') }}">
 </head>
+
 <body style="background-color: #ffffff;">
     <header>
         <h1>
@@ -18,31 +17,17 @@
     </header>
 
     <br/>
-
-    <!-- <div class="container">
-        <h2>Upload foto</h2>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <input type="submit" value="Unggah">
-        </form>
-        <h1>{{ unggah }}</h1>
-    </div> -->
-    <a href = '/use' style="text-decoration: none; color: inherit;" >
-        <div class="container">
-            <h1 class="text">CBIR</h1>
-        </div>
-    </a>
-    
-    <img src="{{ url_for('static', filename='0.jpg') }}" alt="Deskripsi Gambar">
-
-    
-    
-    <div class="about_us">
-        <p>Lebih lanjut tentang kami &nbsp → &nbsp <a href='/about'>About Us</a>.</p>
+    <div class="cbir-container">
+        <a href='/use' class="cbir-link">
+            <span class="text">CBIR</span>
+            <p class="hidden-paragraph">Hayooo klik!</p>
+        </a>
     </div>
 
-    <!--BOOTSTRAP-->
-   
+    <footer class="footer">
+        <p>Lebih lanjut tentang kami &nbsp → &nbsp <a href='/about'>About Us</a>.</p>
+    </footer>
+
 </body>
 
 </html>

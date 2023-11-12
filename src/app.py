@@ -51,10 +51,12 @@ def use():
     #Fungsi Hapus Gambar
     if request.method == 'POST':
     # Mendapatkan path gambar yang akan dihapus dari form
-        image_to_delete = request.form.get('image_path')
+        
+        
 
         # Periksa apakah tombol delete ditekan
         if 'delete_image' in request.form:
+            image_to_delete = request.form.get('image_path')
             # Path lengkap ke file gambar yang akan dihapus
             full_path = os.path.join(app.root_path, image_to_delete)
 
@@ -70,6 +72,22 @@ def use():
                     session['messageunggah'] = "Berhasil Hapus foto!"
                 except Exception as e:
                     print(f"Gagal menghapus file gambar: {str(e)}")
+
+        elif 'select_image' in request.form:
+            image_to_select = request.form.get('image_path')
+            file_name = os.path.basename(image_to_select)
+            full_path = os.path.join(app.root_path, image_to_select)
+            if os.path.exists(full_path) and full_path.startswith(os.path.join(app.root_path, 'static', 'datasets')) and \
+            (full_path.lower().endswith('.jpg') or full_path.lower().endswith('.png')):
+                try:
+                    # Hapus file gambar
+                   
+                    print(f"File gambar {image_to_select} berhasil diselect.")
+                    session['image_url'] = image_to_select
+                    session['namafile'] = file_name
+                    session['messageunggah'] = "Berhasil select foto!"
+                except Exception as e:
+                    print(f"Gagal select file gambar : {str(e)}")
 
 
 

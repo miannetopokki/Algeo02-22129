@@ -1,0 +1,57 @@
+/* General styles for header and footer */
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.footer {
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+/* Styles for CBIR */
+.cbir-container {
+    text-align: center;
+    position: relative;
+    margin-top: 20px;
+}
+
+.cbir-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    border: 2px solid #333;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+}
+
+.cbir-link:hover {
+    background-color: #e0e0e0;
+}
+
+.text {
+    margin: 0;
+    font-size: 24px;
+}
+
+.hidden-paragraph {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cbir-link:hover .hidden-paragraph {
+    display: block;
+}
