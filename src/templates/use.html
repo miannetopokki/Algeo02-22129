@@ -77,24 +77,33 @@
 
                     // Fungsi untuk menangani pengambilan gambar dan pengiriman ke server
                     function captureAndSendImage() {
-                        const canvas = document.createElement('canvas');
-                        const video = document.querySelector('video');
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    const canvas = document.createElement('canvas');
+    const video = document.querySelector('video');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                        const imageBlob = canvas.toBlob(async (blob) => {
-                            const formData = new FormData();
-                            newCapture = 'captured_image.jpg'
-                            formData.append('image', blob, newCapture);
+    // Set mode globalCompositeOperation untuk menghapus kanal alpha
+    canvas.getContext('2d').globalCompositeOperation = 'copy';
 
-                            // Kirim gambar ke server menggunakan fetch
-                            await fetch('/use', {
-                                method: 'POST',
-                                body: formData,
-                            });
-                        }, 'image/png');
-                    }
+    // Menggambar ulang ke elemen canvas
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Mengonversi elemen canvas ke blob dan mengirim ke server
+    canvas.toBlob(async (blob) => {
+        const formData = new FormData();
+        newCapture = 'captured_image.jpg';
+        formData.append('image', blob, newCapture);
+
+        // Kirim gambar ke server menggunakan fetch
+        await fetch('/use', {
+            method: 'POST',
+            body: formData,
+        });
+    }, 'image/jpeg');
+}
+
+
 
                     // Fungsi untuk memulai kamera
                     function startCamera() {
