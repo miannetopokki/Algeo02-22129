@@ -39,25 +39,25 @@ def coOccMtx(gScaleMtx, Angle):
     if (Angle == 0):
         for i in range (height):
             for j in range (width - 1):
-                coOcc[gScaleMtx[i][j] - 1][gScaleMtx[i][j + 1] - 1] += 1
+                coOcc[gScaleMtx[i][j]][gScaleMtx[i][j + 1]] += 1
     
     # Kasus sudut 45 derajat
     elif (Angle == 45):
         for i in range (1, height):
             for j in range (width - 1):
-                coOcc[gScaleMtx[i][j] - 1][gScaleMtx[i - 1][j + 1] - 1] += 1
+                coOcc[gScaleMtx[i][j]][gScaleMtx[i - 1][j + 1]] += 1
     
     # Kasus sudut 90 derajat
     elif (Angle == 90):
         for i in range (1, height):
             for j in range (width):
-                coOcc[gScaleMtx[i][j] - 1][gScaleMtx[i - 1][j] - 1] += 1
+                coOcc[gScaleMtx[i][j]][gScaleMtx[i - 1][j]] += 1
     
     # Kasus sudut 135 derajat
     elif (Angle == 135):
         for i in range (1, height):
             for j in range (1, width):
-                coOcc[gScaleMtx[i][j] - 1][gScaleMtx[i - 1][j - 1] - 1] += 1
+                coOcc[gScaleMtx[i][j]][gScaleMtx[i - 1][j - 1]] += 1
     
     # Mengembalikan cooccurance matrix sesuai sudut yang dimasukkan
     return coOcc
