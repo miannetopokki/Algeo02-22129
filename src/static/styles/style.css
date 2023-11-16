@@ -1,3 +1,4 @@
+
 @keyframes glowing {
   0% {
     border-color: rgba(138, 34, 34, 0.795);
@@ -14,10 +15,12 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif !important;
   background-color: #E8E3E1;
   margin: 0;
   padding: 0;
+  font-size: 16px;
+
 }
 
 header {
@@ -26,6 +29,7 @@ header {
   border-bottom-right-radius: 5%;
   color: #fff;
   text-align: center;
+  font-family: "Times New Roman", Times, serif;
   padding: 1px;
 }
 

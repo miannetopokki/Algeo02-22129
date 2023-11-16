@@ -4,26 +4,27 @@
 <head>
     <title>Home</title>
 
-    <!-- Latest compiled and minified Bootstrap CSS -->
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    <!-- Menggunakan Bootstrap dari CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
 </head>
 
 <body style="background-color: #ffffff;">
-    <header style="background-color: #c2abab48;">
+    <header style="background-color: #c2abab2f;">
         <h1 class="text" style="color: blueviolet;">Reverse Image Search</h1>
     </header>
-    <div class="container-atas">
+    <div class="d-flex justify-content-center" style="background-color: #c2abab2f;">
         <a href = '/' style="text-decoration: none; color: inherit;" >
-            <div class="container">
-                <h3 class="text">HOME</h3>
-            </div>
+            <button type="button" class="btn btn-outline-info">HOME</button>
         </a>
         <a href = '/about' style="text-decoration: none; color: inherit;" >
-            <div class="container">
-                <h3 class="text">ABOUT</h3>
-            </div>
+                <button type="button" class="btn btn-outline-info">ABOUT</button>
         </a>
     </div>
+    
     <div class="flex-container">
         <div class="flex-item-image">
             <img src="{{ image_url }}" alt="Uploaded Image"> 

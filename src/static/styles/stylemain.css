@@ -1,4 +1,62 @@
-/* General styles for header and footer */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container-flex{
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.how-to-use-1 {
+    opacity: 0;
+    transform: scale(0.8);
+    text-align: right;
+    padding: 20px;
+    background-color: #ffffff;
+    animation: fadeIn 1s ease-in-out forwards; /* Menggunakan animasi CSS */
+    flex: 1; /* Menetapkan flex untuk membagi lebar */
+    margin: 10px;
+}
+.how-to-use-2 {
+    opacity: 0;
+    transform: scale(0.8);
+    text-align: right;
+    padding: 20px;
+    background-color: #ffffff;
+    animation: fadeIn 1.5s ease-in-out forwards; /* Menggunakan animasi CSS */
+    flex: 1; /* Menetapkan flex untuk membagi lebar */
+    margin: 10px;
+}
+.how-to-use-3 {
+    opacity: 0;
+    transform: scale(0.8);
+    text-align: right;
+    padding: 20px;
+    background-color: #ffffff;
+    animation: fadeIn 2s ease-in-out forwards; /* Menggunakan animasi CSS */
+    flex: 1; /* Menetapkan flex untuk membagi lebar */
+    margin: 10px;
+}
+.container-flex p{
+    margin: 0;
+    font-size: 20px;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 header {
     text-align: center;
     padding: 20px;
@@ -11,6 +69,9 @@ header {
     position: absolute;
     bottom: 10px;
     width: 100%;
+    margin-top: auto;
+    background-color: #333;
+    color: white;
 }
 
 /* Styles for CBIR */

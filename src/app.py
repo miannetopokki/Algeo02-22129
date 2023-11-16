@@ -5,6 +5,7 @@ import math
 import time
 import glob
 import cv2
+import shutil
 from color import color_based_image_retrieval
 from CBIRtexture import imgToVector,cosSimilarity
 from scrape import scrape_images
@@ -13,7 +14,7 @@ app = Flask(__name__, static_folder='static')
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
 app.config['DATASETS_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'datasets')
 app.config['DATASETSCRAP_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'datasetscrap')
-app.config['FILTER_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static')
+app.config['FILTER_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static','filter')
 app.secret_key = 'keyjangandigantiplisdarihugo'  #buat save session kalo ganti page
 
 # Konfigurasi lokasi direktori 'uploads'
@@ -172,10 +173,15 @@ def use():
                 allowed_extensions = {'jpg', 'jpeg', 'png'}
                 if '.' in uploaded_file.filename and uploaded_file.filename.rsplit('.', 1)[1].lower() in allowed_extensions:
                     file_path = os.path.join(app.config['DATASETS_FOLDER'], uploaded_file.filename)
+                    current_path = os.path.abspath(__file__)
+                    test_path = os.path.join(os.path.dirname(os.path.dirname(current_path)), 'test')
+                  
                     uploaded_file.save(file_path)
+                  
                     messageunggah = "Berhasil diunggah!"
                     image_url = "static/datasets/" + uploaded_file.filename
                     namafile = uploaded_file.filename
+                    shutil.copy(image_url,test_path)
 
                     # Simpan image_url dan namafile di sesi
                     session['image_url'] = image_url
@@ -220,7 +226,7 @@ def use():
             image_list = result
             messageunggah = session.get('messageunggah')
             namafile = session.get('namafile')
-            output_folder = os.path.join(app.config['FILTER_FOLDER'], 'filter')
+            output_folder = os.path.join(app.config['FILTER_FOLDER'])
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
             filteredImages = []
