@@ -284,7 +284,7 @@ def use():
             start_index = (page - 1) * page_size
             end_index = start_index + page_size
 
-            output_folder = os.path.join(app.config['FILTER_FOLDER'], 'filter')
+            output_folder = os.path.join(app.config['FILTER_FOLDER'])
 
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
