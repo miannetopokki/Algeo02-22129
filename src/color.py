@@ -3,22 +3,21 @@ import numpy as np
 import math
 import time
 import glob
-from multiprocessing import process
 
 def convert_rgb_to_hsv(image):
 
     # original method
     image = image[:,:,::-1]
-    image_mat = image/255
+    image = image/255
 
     # pisah channel rgb
-    r=image_mat[:,:,0]
-    g=image_mat[:,:,1]
-    b=image_mat[:,:,2]
+    r=image[:,:,0]
+    g=image[:,:,1]
+    b=image[:,:,2]
 
     # hitung cmax, cmin, dan delta
-    cmax=np.max(image_mat, axis=2)
-    cmin=np.min(image_mat, axis=2)
+    cmax=np.max(image, axis=2)
+    cmin=np.min(image, axis=2)
     delta=(cmax-cmin)
     h = np.zeros_like(r)
     s = np.zeros_like(r)
@@ -178,29 +177,29 @@ def color_based_image_retrieval(query_image, database_images):
 
     return matches
 
-# test case
+# ------------------------------------------------------------------ TEST CASE ------------------------------------------------------------------
 
-if __name__ == "__main__":
-    # Query image
-    query_image = cv2.imread("./static/datasets/bg.png")
+# if __name__ == "__main__":
+#     # Query image
+#     query_image = cv2.imread("./static/datasets/bg.png")
 
-    # load database
-    imdir = './static/datasets/' #folder file
-    ext = ['jpg', 'jpeg', 'png'] #format gambar
-    files = []
-    [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
-    database_images = [cv2.imread(file) for file in files]
+#     # load database
+#     imdir = './static/datasets/' #folder file
+#     ext = ['jpg', 'jpeg', 'png'] #format gambar
+#     files = []
+#     [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
+#     database_images = [cv2.imread(file) for file in files]
 
-    start = time.time()
-    result = color_based_image_retrieval(query_image, database_images)
-    end =time.time()
-    duration = end-start
-    print(f'Time taken: {duration}')
-    #display matches
-    cv2.imshow("Query image", query_image)
-    for i, (image, similarity) in enumerate(result):
-        cv2.imshow(f"Match {i + 1} - Similarity: {similarity:.2f}%", image)
+#     start = time.time()
+#     result = color_based_image_retrieval(query_image, database_images)
+#     end =time.time()
+#     duration = end-start
+#     print(f'Time taken: {duration}')
+#     #display matches
+#     cv2.imshow("Query image", query_image)
+#     for i, (image, similarity) in enumerate(result):
+#         cv2.imshow(f"Match {i + 1} - Similarity: {similarity:.2f}%", image)
 
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+#     cv2.waitKey(0)
+#     cv2.destroyAllWindows()
