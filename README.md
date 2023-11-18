@@ -10,11 +10,11 @@ Tugas Besar 2 IF2123 - Kelompok CupcaKke
 CONTENT BASED IMAGE RETRIEVAL MENGGUNAKAN PARAMETER WARNA DAN TEXTUR
 
 ## Deskripsi
-Program ini melakukan <i>CBIR</i> menggunakan parameter <i>warna</i> dan <i>warna</i> yang memanfaatkan konsep dari <i>cosine similarity</i> untuk mengetahui tingkat kemiripan dua buah gambar. Program ini dibuat menggunakan bahasa pemrograman Python, html, css, dan javascript.
+Program ini melakukan <i>CBIR</i> menggunakan parameter <i>warna</i> dan <i>textur</i> yang memanfaatkan konsep dari <i>cosine similarity</i> untuk mengetahui tingkat kemiripan dua buah gambar. Program ini dibuat menggunakan bahasa pemrograman Python, html, css, dan javascript.
 
 ## Cara Menjalankan
 Berikut adalah cara menjalankan program ini,
-1. clone repo ini ke directory lokal `git clone https://github.com/miannetopokki/Algeo02-22129.git`
+1. Clone repo ini ke directory lokal `git clone https://github.com/miannetopokki/Algeo02-22129.git`
 2. Change directory ke `src`
 3. Install dependencies `pip install -r .\requirements.txt`
 4. Jalankan app.py `python app.py`
