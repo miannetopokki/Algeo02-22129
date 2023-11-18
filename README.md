@@ -1,5 +1,5 @@
 # Algeo02-22129
-Tugas Besar 2 IF2123 - Kelompok CupcaKke
+Tugas Besar 2 IF2123 - Kelompok CupcakKe
 | NIM | Nama |
 | :---: | :---: |
 | 13522129 | Hugo Sabam Augusto |
