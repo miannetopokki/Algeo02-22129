@@ -147,24 +147,6 @@ def entropy(coOccMtx):
     # Mengembalikan nilai entropy
     return ent
 
-def normalizeVec(V):
-    # Variabel panjang vektor
-    length = 0
-
-    # Loop untuk menjumlahkan kuadrat elemen
-    for i in range (len(V)):
-        length += pow(V[i], 2)
-    
-    # Mencari akar
-    length = math.sqrt(length)
-
-    # Normalisasi dengan membagi semua elemen dengan panjang
-    for i in range (len(V)):
-        V[i] = V[i] / length
-
-    # Mengembalikan vektor yang sudah dinormalisasi
-    return V
-
 def imgToVector(img_name):
     # Buka file dengan nama img_name
     img = Image.open(img_name)
