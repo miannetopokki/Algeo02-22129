@@ -19,6 +19,14 @@ app.secret_key = 'keyjangandigantiplisdarihugo'  #buat save session kalo ganti p
 
 # Konfigurasi lokasi direktori 'uploads'
 
+def resetFilter():
+    folder_path = os.path.join(os.path.dirname(__file__), 'static', 'filter')
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path,filename)
+        if os.path.isfile(file_path) and (filename.lower().endswith('.jpg') or filename.lower().endswith('.png')):
+            os.remove(file_path)
+    
+
 @app.route('/')
 def main():
     message = "Hello from Flask!"
@@ -33,8 +41,13 @@ def about():
 
 @app.route('/use', methods=['GET', 'POST'])
 def use():
+    
     if 'isScrape' not in session:  # Periksa apakah 'var' sudah ada di sesi
         session['isScrape'] = False
+    if 'isSearch' not in session:  # Periksa apakah 'var' sudah ada di sesi
+        session['isSearch'] = False
+
+        
     if 'image' in request.files:
         imageKamera = request.files['image']
         if imageKamera:
@@ -90,12 +103,6 @@ def use():
                 except Exception as e:
                     print(f"Gagal select file gambar : {str(e)}")
 
-
-
-
-
-
-
     #DEKLARASI AWAL==============
     # Menampilkan maksimum 6 gambar per halaman
     page_size = 12
@@ -128,6 +135,8 @@ def use():
     elif action == 'stopScrape':
         session['isScrape'] = False
 
+
+
     if(session['isScrape'] == True):
         datasetscrap_dir = app.config['DATASETSCRAP_FOLDER']
         image_list_scrap = [os.path.join('static', 'datasetscrap', filename) for filename in os.listdir(datasetscrap_dir) if filename.endswith(('.jpg', '.png', '.jpeg'))]
@@ -137,17 +146,19 @@ def use():
 
 
     if action == "Reset":
-        folder_path = os.path.join(os.path.dirname(__file__), 'static', 'filter')
+        
         try :
             session['image_url'] = None
             session['namafile'] = None
-            for filename in os.listdir(folder_path):
-                file_path = os.path.join(folder_path,filename)
-                if os.path.isfile(file_path) and (filename.lower().endswith('.jpg') or filename.lower().endswith('.png')):
-                    os.remove(file_path)
+            session['isSearch'] = False
+            resetFilter()
+            
             print("Semua file gambar (.jpg dan .png) dalam folder berhasil dihapus.")
         except Exception as e:
             print(f"Terjadi kesalahan: {str(e)}")
+
+
+        
     if action == "deleteScrap":
         folder_path = os.path.join(os.path.dirname(__file__), 'static', 'datasetscrap')
         try :
@@ -155,7 +166,7 @@ def use():
             session['namafile'] = None
             for filename in os.listdir(folder_path):
                 file_path = os.path.join(folder_path,filename)
-                if os.path.isfile(file_path) and (filename.lower().endswith('.jpg') or filename.lower().endswith('.png')):
+                if os.path.isfile(file_path) and (filename.lower().endswith('.jpg') or filename.lower().endswith('.png') or filename.lower().endswith('.jpeg')):
                     os.remove(file_path)
             print("Semua file gambar (.jpg dan .png) dalam folder berhasil dihapus.")
         except Exception as e:
@@ -163,8 +174,52 @@ def use():
 
 
 
+    if action =="deletedatabase":
+        folder_path = os.path.join(os.path.dirname(__file__), 'static', 'datasets')
+        try :
+            session['image_url'] = None
+            session['namafile'] = None
+            for filename in os.listdir(folder_path):
+                file_path = os.path.join(folder_path,filename)
+                if os.path.isfile(file_path) and (filename.lower().endswith('.jpg') or filename.lower().endswith('.png') or filename.lower().endswith('.jpeg')):
+                    os.remove(file_path)
+            print("Semua file gambar (.jpg dan .png) dalam folder berhasil dihapus.")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {str(e)}")
+        
 
 
+
+
+    if action == "uploadfile":
+        uploaded_files = request.files.getlist('file')
+
+        if uploaded_files:
+            # Dapatkan path folder tempat file-file tersebut disimpan
+            folder_path = os.path.join(app.config['DATASETS_FOLDER'])  # Ganti dengan path yang sesuai
+            os.makedirs(folder_path, exist_ok=True)  # Pastikan folder tempat file disimpan ada
+
+            # Simpan file-file yang diunggah ke dalam folder tempat file disimpan
+            for uploaded_file in uploaded_files:
+                file_path = os.path.join(folder_path, secure_filename(uploaded_file.filename))
+                uploaded_file.save(file_path)
+
+            # List semua file di folder dengan ekstensi .jpg atau .png
+            image_files = [file for file in os.listdir(folder_path) if file.lower().endswith(('.jpg', '.png'))]
+
+            # Proses file-file gambar
+            array_of_images = []
+            for image_file in image_files:
+                full_path = os.path.join(folder_path, image_file)
+                # Add your logic to handle each image file
+                # Misalnya, simpan path ke array_of_images
+                array_of_images.append(full_path)
+                print('Processing image file:', full_path)
+
+            # Sekarang array_of_images berisi path dari semua file gambar yang diunggah
+
+
+    
     if action == "Unggah":
         if request.method == 'POST':
             uploaded_file = request.files['file']
@@ -201,6 +256,13 @@ def use():
 
     # Menghitung jumlah halaman total
     if action == 'Search':
+        #refresh
+        resetFilter()
+        session['filteredImages'] = []
+        session['countfiltered'] = 0
+   
+
+        
         database_images = []
         image_url = session.get('image_url')
         if (image_url != None):
@@ -210,8 +272,8 @@ def use():
                     n = cv2.imread(img)
                     database_images.append(n)
             else:
-
-                for img in glob.glob("./static/datasets/*.jpg"):
+                dataset_path = os.path.join(app.config['DATASETS_FOLDER'])
+                for img in glob.glob(os.path.join(dataset_path, "*.jpg")):
                     n = cv2.imread(img)
                     database_images.append(n)
 
@@ -224,12 +286,14 @@ def use():
             start_index = (page - 1) * page_size
             end_index = start_index + page_size
             image_list = result
+
+            
             messageunggah = session.get('messageunggah')
             namafile = session.get('namafile')
             output_folder = os.path.join(app.config['FILTER_FOLDER'])
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
-            filteredImages = []
+            filteredImages = session.get('filteredImages', [])
             # Simpan gambar-gambar hasil filter
             for i, (image, similarity) in enumerate(image_list):
                 output_filename = f'result{i + 1}.jpg'
@@ -237,27 +301,29 @@ def use():
                 cv2.imwrite(output_path, image)
                 filteredImages.append((output_path,similarity))
             # Sekarang, baca daftar gambar hasil filter dari direktori 'filter'
+            session['filteredImages'] = filteredImages
             countFiltered = len(filteredImages)
-        
+            session['countfiltered'] = (countFiltered)
+            session['duration'] = float(duration)
             image_list = [os.path.join('static', 'filter', os.path.basename(image_path)) for image_path, similarity in filteredImages]
             current_images = image_list[start_index:end_index]
             session['messageunggah'] = "Search Berhasil!"
             messageunggah = session.get('messageunggah')
             session['jenissearch'] = "Color"
-            jenissearch = session.get('jenissearch')
-            duration = round(duration,2)
-            return render_template('use.html',searchType = jenissearch, countfilter = countFiltered,unggah=messageunggah, image_url=image_url, namafile=namafile, result =filteredImages ,image_list=current_images, num_pages=1, current_page=1, durasi=duration, isScrape = session['isScrape'])
-        
-
+            session['duration'] = round(duration,2)
+            session['isSearch'] = True
         else:
             session['messageunggah'] = "Error! Anda mau search apa wkwkwk"
             messageunggah = session.get('messageunggah')
 
 
-
     if action == 'SearchTexture':
-        database_images = []
+        #deklarasi awal / refresh
+        resetFilter()
         result = []
+        session['filteredImages'] = []
+        session['countfiltered'] = 0
+        
         image_url = session.get('image_url')
         if (image_url != None): #ada fotonya
             vec_ref = imgToVector(image_url)
@@ -291,7 +357,7 @@ def use():
 
             filteredImages = []
             result.sort(key=lambda x: x[1], reverse=True)
-
+            filteredImages = session.get('filteredImages', [])
             namafile = session.get('namafile')
             for i, (image, similarity) in enumerate(result):
                 output_filename = f'result{i + 1}.jpg'
@@ -301,30 +367,43 @@ def use():
             countFiltered = len(filteredImages)
             image_list = [os.path.join('static', 'filter', os.path.basename(image_path)) for image_path, similarity in filteredImages]
             current_images = image_list[start_index:end_index]
+            session['filteredImages'] = filteredImages
             session['messageunggah'] = "Search Berhasil!"
             session['jenissearch'] = "Texture"
+            session['countfiltered'] = (countFiltered)
             jenissearch = session.get('jenissearch')
             messageunggah = session.get('messageunggah')
-            duration = round(duration,2)
-            return render_template('use.html', searchType = jenissearch ,countfilter = countFiltered,unggah=messageunggah, image_url=image_url, namafile=namafile, result =filteredImages ,image_list=current_images, num_pages=1, current_page=1, durasi=duration, isScrape = session['isScrape'])
-
-
+            session['duration'] = round(duration,2)
+            session['isSearch'] = True
         else:
             session['messageunggah'] = "Error! Anda mau search apa wkwkwk"
             messageunggah = session.get('messageunggah')
-            
-   
-        
+
+
+    if (session['isSearch'] == True):
+        filteredImages = session.get('filteredImages', [])
+        page_size = 12
+        page = int(request.args.get('page', 1))  # Halaman saat ini, defaultnya adalah halaman 1
+        start_index = (page - 1) * page_size
+        end_index = start_index + page_size
+        # Path ke direktori datasets di dalam folder static
+        dataset_dir = app.config['FILTER_FOLDER']
+        # Mengambil daftar file gambar dalam direktori datasets
+        image_list = [os.path.join('static', 'filter', filename) for filename in os.listdir(dataset_dir) if filename.endswith(('.jpg', '.png', '.jpeg'))]
+        # Mengambil daftar gambar untuk halaman saat ini
+        current_images = image_list[start_index:end_index]
+        num_pages = math.ceil(len(image_list) / page_size)
+        # image_list = []
+        messageunggah = ""
+        image_url = None  # Tetapkan dengan nilai default
+        namafile = None
+        return render_template('use.html',searchType = session['jenissearch'], countfilter = session['countfiltered'],unggah=messageunggah,num_pages = num_pages,current_page = page, image_url=session['image_url'], namafile=session['namafile'], result =filteredImages ,image_list=current_images, durasi=session['duration'], isScrape = session['isScrape'])
+
     image_url = session.get('image_url')
     messageunggah = session.get('messageunggah')
     namafile = session.get('namafile')
     enablePages = "True"
-
-
-
-
-
-    return render_template('use.html', unggah=messageunggah, image_url=image_url, namafile=namafile, image_list=current_images, num_pages=num_pages, current_page=page,enablepage = enablePages, isScrape = session['isScrape'])
+    return render_template('use.html', unggah=messageunggah, image_url=image_url, namafile=namafile, image_list=current_images, num_pages=num_pages, current_page=page ,enablepage = enablePages, isScrape = session['isScrape'])
 
 if __name__ == '__main__':
     app.run()

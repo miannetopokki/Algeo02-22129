@@ -3,13 +3,12 @@
 
 <head>
     <title>Home</title>
-
-    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
     <!-- Menggunakan Bootstrap dari CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+    
 </head>
 
 <body style="background-color: #ffffff;">
@@ -30,16 +29,43 @@
             <img src="{{ image_url }}" alt="Uploaded Image"> 
         </div>
         <div class="flex-item-vert flex-container-vertical">
-            <div class="flex-item">
-                <h2 class="text">Upload Dataset (Image)</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h2 class="text">Upload Dataset (Image)</h2>
+                    
+                    <form method="POST" enctype="multipart/form-data" action="/use" class="search-button">
+                        <input type="file" name="file">
+                        <input type="submit" name = "action" value="Unggah">
+                    </form>
+                    <h2 class="text">Nama file : {{namafile}}</h2>
+                    <h3 class="text">{{ unggah }}</h3>
+                </div>
                 
-                <form method="POST" enctype="multipart/form-data" action="/use" class="search-button">
-                    <input type="file" name="file">
-                    <input type="submit" name = "action" value="Unggah">
+                <form id="folderForm" action="/use" method="post" enctype="multipart/form-data">
+                    <div class="flex-item">
+                        <label for="folderInput">
+                            <img src="{{ url_for('static', filename='fileblue2.png') }}" alt="fileimg" width="170" height="170">
+                        </label>
+                        <input type="file" id="folderInput" name="file" style="display: none;" webkitdirectory directory multiple />
+                    </div>
+                    
+                    <!-- Tambahkan input tersembunyi untuk menyimpan nilai action -->
+                    <input type="hidden" name="action" id="actionInput" value="uploadfile">
+                    
                 </form>
-                <h2 class="text">Nama file : {{namafile}}</h2>
-                <h3 class="text">{{ unggah }}</h3>
+                    
+                <script>
+                    document.getElementById('folderInput').addEventListener('change', function() {
+                        // Mengubah nilai input tersembunyi sesuai dengan tindakan yang diinginkan
+                        document.getElementById('actionInput').value = 'uploadfile';
+                
+                        // Menyubmit formulir
+                        document.getElementById('folderForm').submit();
+                    });
+                </script>
+                
             </div>
+            
             <div class="flex-container">
                 <div class="flex-item toggle-container">
                     <div class="toggle-content-left">
@@ -179,7 +205,7 @@
                     <form action="/use" method="POST">
                         <button type="submit" class="search-button" name = "action" value="Scrap">Show Scrap</button>
                         <button type="submit" class="search-button" name = "action" value="stopScrape">Hide Scrap</button>
-                        <button type="submit" class="search-button" name = "action" value="deleteScrap">Delete Database scrap</button>
+                     
                     </form>
                     <form action="/use" method="POST">
                         <label for="inputText">Masukkan link:</label>
@@ -187,6 +213,14 @@
                         <input type="submit" name = "action" value="SubmitLink">
                     </form>
                     <h2>Scrap view : {{isScrape}}</h2>
+                </div>
+                <div class="flex-item">
+                    <form action="/use" method="POST">
+                        <button type="submit" class="search-button" name = "action" value="deleteScrap" style="background-color: red; margin: 10px;">Delete Database scrap</button>
+                    </form>
+                    <form action="/use" method="POST">
+                        <button type="submit" class="search-button" name = "action" value="deletedatabase" style="background-color: red; margin: 10px;">Delete Database</button>
+                    </form>
                 </div>
             </div>
             {% if result%}
@@ -208,9 +242,9 @@
     </div>
     {% endif %}
     {%if result%}
-    <div class="grid-container-result">
+    <div class="grid-container">
         
-        <div class="image-grid-result">
+        <div class="image-grid">
             {% for image in image_list %}
                 <div class="image-item">
                     <div class="image-hover">
@@ -221,7 +255,7 @@
                             </form>
                         </div>
                     </div>  
-                    <h2 class="similarity-text">Similarity : {{ result[loop.index - 1][1] }}</h2>
+                    <h2 class="similarity-text">Similarity : {{ result[loop.index -1 + ((current_page - 1) * 12)][1] }}</h2>
                 </div>
             {% endfor %}
         </div>
@@ -264,7 +298,7 @@
         {% endfor %}
     </div>
  
-    
+  
     
       
     
