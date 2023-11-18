@@ -256,6 +256,9 @@ def use():
 
     # Menghitung jumlah halaman total
     if action == 'Search':
+        output_folder = os.path.join(app.config['FILTER_FOLDER'])
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
         #refresh
         resetFilter()
         session['filteredImages'] = []
@@ -290,9 +293,7 @@ def use():
             
             messageunggah = session.get('messageunggah')
             namafile = session.get('namafile')
-            output_folder = os.path.join(app.config['FILTER_FOLDER'])
-            if not os.path.exists(output_folder):
-                os.makedirs(output_folder)
+            
             filteredImages = session.get('filteredImages', [])
             # Simpan gambar-gambar hasil filter
             for i, (image, similarity) in enumerate(image_list):
@@ -323,6 +324,9 @@ def use():
         result = []
         session['filteredImages'] = []
         session['countfiltered'] = 0
+        output_folder = os.path.join(app.config['FILTER_FOLDER'])
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
         
         image_url = session.get('image_url')
         if (image_url != None): #ada fotonya
@@ -350,10 +354,7 @@ def use():
             start_index = (page - 1) * page_size
             end_index = start_index + page_size
 
-            output_folder = os.path.join(app.config['FILTER_FOLDER'])
 
-            if not os.path.exists(output_folder):
-                os.makedirs(output_folder)
 
             filteredImages = []
             result.sort(key=lambda x: x[1], reverse=True)
