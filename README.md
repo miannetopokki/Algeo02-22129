@@ -32,3 +32,15 @@ Berikut adalah cara menjalankan program ini,
 ## Technologies Used
 python, html, css, and javascript
 
+## Example Results
+--Camera Search by Color--
+![](img/hasilkamerasebagaireferensi.png)
+![](img/kamerasearchbycolor.png)
+
+--Camera Search by Texture--
+![](img/hasilkamerasebagaireferensi.png)
+![](img/kamerasearchbytexture.png)
+
+--Image Scraping--
+![](img/hasilscrape.png)
+![](img/webscrape.png)
