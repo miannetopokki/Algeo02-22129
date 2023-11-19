@@ -28,11 +28,7 @@ Berikut adalah cara menjalankan program ini,
 | Website CBIR | Selesai |
 | Bonus 1 (Kamera) | Selesai |
 | Bonus 2 (Image Scraping) | Selesai |
-| Bonus 3 (Video) | Selesai |
 
 ## Technologies Used
 python, html, css, and javascript
-
-## Penjelasan Algoritma dan Bonus
-link video
 
