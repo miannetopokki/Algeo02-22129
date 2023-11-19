@@ -30,17 +30,17 @@ Berikut adalah cara menjalankan program ini,
 | Bonus 2 (Image Scraping) | Selesai |
 
 ## Technologies Used
-python, html, css, and javascript
+Python,HTML,CSS,Javascript,Bootstrap
 
 ## Example Results
---Camera Search by Color--
+## --Camera Search by Color--
 ![](img/hasilkamerasebagaireferensi.png)
 ![](img/kamerasearchbycolor.png)
 
---Camera Search by Texture--
+## --Camera Search by Texture--
 ![](img/hasilkamerasebagaireferensi.png)
 ![](img/kamerasearchbytexture.png)
 
---Image Scraping--
+## --Image Scraping--
 ![](img/hasilscrape.png)
 ![](img/webscrape.png)
