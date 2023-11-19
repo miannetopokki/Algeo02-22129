@@ -3,7 +3,9 @@
 
 <head>
     <title>Home</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
     <!-- Menggunakan Bootstrap dari CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -15,6 +17,14 @@
     <header style="background-color: #c2abab2f;">
         <h1 class="text" style="color: blueviolet;">Reverse Image Search</h1>
     </header>
+    <div id="loading" style="display:none;">
+        <img src="{{ url_for('static', filename='search.gif') }}" alt="Loading...">
+    </div>
+    <div id="loadinggear" style="display:none;">
+        <img src="{{ url_for('static', filename='gear.gif') }}" alt="Loading...">
+    </div>
+    <div id="overlay"></div>
+    
     <div class="d-flex justify-content-center" style="background-color: #c2abab2f;">
         <a href = '/' style="text-decoration: none; color: inherit;" >
             <button type="button" class="btn btn-outline-info">HOME</button>
@@ -70,8 +80,8 @@
                 <div class="flex-item toggle-container">
                     <div class="toggle-content-left">
                         <form action="/use" method="POST">
-                            <button type="submit" class="search-button" name = "action" value="Search">SearchColor</button>
-                            <button type="submit" class="search-button" name = "action" value="SearchTexture">SearchTexture</button>  
+                            <button type="submit" class="search-button" name = "action" value="Search" id="loadButton">SearchColor</button>
+                            <button type="submit" class="search-button" name = "action" value="SearchTexture" id="loadButton2">SearchTexture</button>  
                         </form>
                     </div>
                 </div>
@@ -104,31 +114,44 @@
 
                     // Fungsi untuk menangani pengambilan gambar dan pengiriman ke server
                     function captureAndSendImage() {
-    const canvas = document.createElement('canvas');
-    const video = document.querySelector('video');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                        var overlay = document.getElementById('overlay');
+                        var loadingImage = document.getElementById('loading');
 
-    // Set mode globalCompositeOperation untuk menghapus kanal alpha
-    canvas.getContext('2d').globalCompositeOperation = 'copy';
+                        
+                        const canvas = document.createElement('canvas');
+                        const video = document.querySelector('video');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                        overlay.style.display = 'block';
+                        loadingImage.style.display = 'block';
 
-    // Menggambar ulang ke elemen canvas
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                        // Menambahkan event listener untuk mengetahui kapan halaman selesai dimuat ulang
+                        window.addEventListener('load', function () {
+                        // Sembunyikan gambar loading dan overlay setelah halaman dimuat ulang
+                        overlay.style.display = 'none';
+                        loadingImage.style.display = 'none';
+                    });
 
-    // Mengonversi elemen canvas ke blob dan mengirim ke server
-    canvas.toBlob(async (blob) => {
-        const formData = new FormData();
-        newCapture = 'captured_image.jpg';
-        formData.append('image', blob, newCapture);
+                        // Set mode globalCompositeOperation untuk menghapus kanal alpha
+                        canvas.getContext('2d').globalCompositeOperation = 'copy';
 
-        // Kirim gambar ke server menggunakan fetch
-        await fetch('/use', {
-            method: 'POST',
-            body: formData,
-        });
-    }, 'image/jpeg');
-}
+                        // Menggambar ulang ke elemen canvas
+                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        // Mengonversi elemen canvas ke blob dan mengirim ke server
+                        canvas.toBlob(async (blob) => {
+                            const formData = new FormData();
+                            newCapture = 'captured_image.jpg';
+                            formData.append('image', blob, newCapture);
+
+                            // Kirim gambar ke server menggunakan fetch
+                            await fetch('/use', {
+                                method: 'POST',
+                                body: formData,
+                            });
+                        }, 'image/jpeg');
+                    }
 
 
 
@@ -195,6 +218,7 @@
                     if (isCameraActive) {
                         startCamera(); // Kamera harus diaktifkan kembali jika sebelumnya aktif
                     }
+                    
 
                 </script>
 
@@ -210,7 +234,7 @@
                     <form action="/use" method="POST">
                         <label for="inputText">Masukkan link:</label>
                         <input type="text" id="inputText" name="inputLinkScrap">
-                        <input type="submit" name = "action" value="SubmitLink">
+                        <input type="submit" name = "action" value="SubmitLink" id="loadButton2">
                     </form>
                     <h2>Scrap view : {{isScrape}}</h2>
                 </div>
@@ -241,6 +265,14 @@
         <h2>Result: </h2>
     </div>
     {% endif %}
+    <div class="d-flex justify-content-xl-center">
+        {% for page_num in range(1, num_pages + 1) %}
+            <a class = "pagination-button" href="?page={{ page_num }}">
+                <button type="button" class="btn btn-outline-primary btn-primary btn-lg" >{{ page_num }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
     {%if result%}
     <div class="grid-container">
         
@@ -283,25 +315,49 @@
         </div>
     </div>
     {%endif%}
-    <div class="pagination">
-        {% if current_page > 1 %}
-            <a class="pagination-button" href="?page={{ current_page - 1 }}">Previous</a>
-        {% endif %}
-        <h2 style="color: blueviolet;">{{ current_page }}</h2>
-        {% if current_page < num_pages %}
-            <a class="pagination-button" href="?page={{ current_page + 1 }}">Next</a>
-        {% endif %}
-    </div>
-    <div class="pagination">
-        {% for page_num in range(1, num_pages + 1) %}
-            <a class = "pagination-button"href="?page={{ page_num }}">{{ page_num }}</a>
-        {% endfor %}
-    </div>
- 
-  
     
-      
     
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var loadButton = document.getElementById('loadButton');
+            var loadButton2 = document.getElementById('loadButton2');
+            var overlay = document.getElementById('overlay');
+            var loadingImage = document.getElementById('loading');
+            var loadingImageGear = document.getElementById('loadinggear');
+
+            // Menampilkan gambar loading dan overlay saat tombol diklik
+            loadButton.addEventListener('click', function () {
+                overlay.style.display = 'block';
+                loadingImage.style.display = 'block';
+
+                // Menambahkan event listener untuk mengetahui kapan halaman selesai dimuat ulang
+                window.addEventListener('load', function () {
+                    // Sembunyikan gambar loading dan overlay setelah halaman dimuat ulang
+                    overlay.style.display = 'none';
+                    loadingImage.style.display = 'none';
+                });
+
+                // Simulasikan waktu loading data (gantilah dengan logika sesuai kebutuhan Anda)
+                // Di sini, kita hanya menambahkan timeout sebagai contoh
+            
+            });
+            loadButton2.addEventListener('click', function () {
+                overlay.style.display = 'block';
+                loadingImageGear.style.display = 'block';
+
+                // Menambahkan event listener untuk mengetahui kapan halaman selesai dimuat ulang
+                window.addEventListener('load', function () {
+                    // Sembunyikan gambar loading dan overlay setelah halaman dimuat ulang
+                    overlay.style.display = 'none';
+                    loadingImageGear.style.display = 'none';
+                });
+
+                // Simulasikan waktu loading data (gantilah dengan logika sesuai kebutuhan Anda)
+                // Di sini, kita hanya menambahkan timeout sebagai contoh
+            
+            });
+        });
+    </script>
 </body>
 
 </html>

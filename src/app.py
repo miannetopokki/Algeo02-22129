@@ -26,6 +26,9 @@ def resetFilter():
         if os.path.isfile(file_path) and (filename.lower().endswith('.jpg') or filename.lower().endswith('.png')):
             os.remove(file_path)
     
+@app.route('/sikret')
+def sikret():
+    return render_template('sikret.html')
 
 @app.route('/')
 def main():

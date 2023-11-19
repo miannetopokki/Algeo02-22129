@@ -1,11 +1,13 @@
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
 }
 .container-flex{
     display: flex;
     flex-direction: column;
+    align-items: center;
+    
 }
 .container {
     width: 80%;
@@ -15,36 +17,70 @@ body {
 .how-to-use-1 {
     opacity: 0;
     transform: scale(0.8);
-    text-align: right;
-    padding: 20px;
+    padding: 40px;
     background-color: #ffffff;
     animation: fadeIn 1s ease-in-out forwards; /* Menggunakan animasi CSS */
     flex: 1; /* Menetapkan flex untuk membagi lebar */
-    margin: 10px;
+
+    width: 70%;
 }
 .how-to-use-2 {
     opacity: 0;
     transform: scale(0.8);
-    text-align: right;
-    padding: 20px;
+   
+    padding: 40px;
     background-color: #ffffff;
     animation: fadeIn 1.5s ease-in-out forwards; /* Menggunakan animasi CSS */
     flex: 1; /* Menetapkan flex untuk membagi lebar */
-    margin: 10px;
+    width: 70%;
 }
 .how-to-use-3 {
     opacity: 0;
     transform: scale(0.8);
-    text-align: right;
+    text-align: left;
     padding: 20px;
     background-color: #ffffff;
     animation: fadeIn 2s ease-in-out forwards; /* Menggunakan animasi CSS */
     flex: 1; /* Menetapkan flex untuk membagi lebar */
     margin: 10px;
 }
+.how-to-use-1,
+.how-to-use-2,
+.how-to-use-3 {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Tambahkan bayangan halus */
+    background-color: #ffffff; /* Tambahkan latar belakang warna putih */
+    text-align: justify;
+    text-align: center;
+}
+.how-to-use-1,
+.how-to-use-2,
+.how-to-use-3 {
+    color: #333; /* Ganti warna teks sesuai kebutuhan */
+    font-size: 18px; /* Sesuaikan ukuran teks */
+    line-height: 1.6; /* Sesuaikan jarak antar baris */
+}
+.how-to-use-1,
+.how-to-use-2,
+.how-to-use-3 {
+    padding: 20px; /* Sesuaikan padding sesuai kebutuhan */
+    margin: 20px; /* Sesuaikan margin sesuai kebutuhan */
+}
+.how-to-use-1,
+.how-to-use-2,
+.how-to-use-3 {
+    max-width: 1200px; /* Sesuaikan lebar maksimum sesuai kebutuhan */
+    width: 100%;
+}
+
 .container-flex p{
     margin: 0;
     font-size: 20px;
+}
+img {
+    max-width: 100%; /* Membuat gambar responsif sesuai dengan lebar container */
+    height: auto;
+    margin-top: 10px; /* Tambahkan margin atas pada gambar */
+    margin-bottom: 10px; /* Tambahkan margin bawah pada gambar */
 }
 @keyframes fadeIn {
     from {
@@ -64,15 +100,14 @@ header {
     color: white;
 }
 
-.footer {
-    text-align: center;
-    position: absolute;
-    bottom: 10px;
+footer {
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    margin-top: auto;
-    background-color: #333;
-    color: white;
-}
+    background-color: #f1f1f1; /* Add your preferred background color */
+    text-align: center;
+    padding: 10px;
+  }
 
 /* Styles for CBIR */
 .cbir-container {

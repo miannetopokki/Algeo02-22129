@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
@@ -14,5 +14,103 @@
     </div>
 
 </body>
+
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>About Us</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <!-- Contoh menyertakan font dari Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styleabout.css') }}">
+    
+
+</head>
+
+<body style="background-color: #ffffff;">
+
+    <header>
+        <h1>
+            AWESOME PEOPLE BEHIND THIS MASTERPIECE
+            <br>
+            😎
+        </h1>
+        <a href="/use">
+            <button type="button" class="btn btn-dark">CBIR</button>
+        </a>
+        <a href="/">
+            <button type="button" class="btn btn-dark">Home</button>
+        </a>
+        
+
+    </header>
+
+    <br/>
+    <h1 style="text-align: center;">About Us</h1>
+    <div class="about-us">
+        <p>
+            CupcakKe group believes in the power of collaboration and continuous learning. With a combination
+            of technical expertise and creativity, we aim to deliver a unique and engaging experience for our users.
+            Feel free to explore our platform and discover the wonders of image comparison with CupcakKe!
+        </p>
+        <p>
+            anjay
+        </p>
+        
+    </div>
+    <div class="container-flex">
+
+        <div class="about-us-1">
+            <img src="{{ url_for('static', filename='nicopoi.jpg') }}">
+            <p>
+                <ul>
+                    🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌
+                    <li>Nama: Nicholas Reymond Sihite</li>  
+                    <li>NIM: 13522144</li>  
+                    <li>QATT: Ternyata saya lebih mirip pisang dibanding KTM saya kalau dilihat dari teksturnya</li>  
+                    <li>Instagram : @nicholasrs05 </li>
+                </ul>
+            </p>
+            
+        </div>
+        <div class="about-us-2">
+            <img src="{{ url_for('static', filename='palingkeren.jpg') }}">
+            <p>
+                <ul>
+                    <li>Nama: Hugo Sabam Augusto</li>  
+                    <li>NIM: 13522129</li>  
+                    <li>QATT: Nico = Pisang</li>  
+                    <li>Instagram : @hugo_s_a_</li>
+                </ul>
+            </p>
+            
+        </div>
+        <div class="about-us-3">
+            <img src="{{ url_for('static', filename='semi.jpg') }}">
+            <p>
+                <ul>
+                    <li>Nama : Samy Muhammad Haikal</li>  
+                    <li>NIM : 13522151</li>  
+                    <li>QATT :  pisang pisang apa yang bisa ngomong? Yak betul, nico</li>  
+                    <li>Instagram : @samymhaikal </li>
+                </ul>
+            </p>
+            
+        </div>
+    </div>
+    
+
+    <a href="/sikret">
+        <button type="button" class="btn btn-link">???</button>
+    </a>
+    
 
 </html>

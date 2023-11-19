@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/stylemain.css') }}">
     <!-- Contoh menyertakan font dari Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 
 </head>
 
@@ -33,21 +35,33 @@
             <h1 style="text-align: center;">How To Use!</h1>
         </div>
         <div class="how-to-use-1">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac velit nec eros scelerisque luctus quis tempor sapien. Integer eu velit ac nisl finibus tincidunt non at nulla. Curabitur mi mi, tempus nec elit sed, aliquet pharetra erat. Ut malesuada eros turpis, a egestas libero semper eget. Praesent id nibh et orci venenatis vulputate ut ac sem. Praesent sodales quis ipsum vel condimentum. Nam mollis euismod lacus scelerisque porttitor. Sed a feugiat orci. Suspendisse at nibh vitae erat malesuada tristique. Aliquam eu porttitor elit. Nulla eleifend congue finibus. Duis sed erat lobortis, finibus quam at, imperdiet sapien. Duis ornare felis laoreet leo aliquam rutrum. Suspendisse ac neque id lacus posuere venenatis eu at nisi. Sed laoreet ligula sed molestie tincidunt. Phasellus eu nulla ornare, ultricies tellus quis, lobortis mauris. Aliquam suscipit, nulla at vehicula egestas, turpis mi vehicula neque, et mattis arcu leo quis massa. Aliquam sollicitudin malesuada placerat. Nam sollicitudin erat eget justo dictum pharetra. Ut purus massa, placerat at odio et, tristique porta augue. Integer quis convallis purus, vel auctor lacus..</p>
+            
+            <h2>Tampilan Gambar ,Pilihan Search dan Upload </h2>
+            <p>Dalam segmen ini, pengguna dapat mengunggah gambar dalam bentuk file atau folder sebagai dataset pencarian dengan dua parameter. Setelah unggah, pengguna dapat melihat tampilan gambar yang siap diproses. Terdapat dua tombol utama untuk pencarian Content-Based Image Retrieval (CBIR) berdasarkan tekstur dan warna. Selain itu, terdapat fitur Delete Database yang terdiri dari dua tombol, satu untuk menghapus seluruh dataset dan yang lainnya untuk menghapus dataset spesifik hasil scraping.</p>
+            <h3>Upload file / folder</h3>
+            <img src="{{ url_for('static', filename='gif3.gif') }}">
+            <h3>Searching</h3>
+            <img src="{{ url_for('static', filename='gif4.gif') }}">
         </div>
         <div class="how-to-use-2">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac vee ut ac sem. Praesent sodales quis ipsum vel condimentum. Nam mollis euismod lacus scelerisque porttitor. Sed a feugiat orci. Suspendisse at nibh vitae erat malesuada tristique. Aliquam eu porttitor elit. Nulla eleifend congue finibus. Duis sed erat lobortis, finibus quam at, imperdiet sapien. Duis ornare felis laoreet leo aliquam rutrum. Suspendisse ac neque id lacus posuere venenatis eu at nisi. Sed laoreet ligula sed molestie tincidunt. Phasellus eu nulla ornare, ultricies tellus quis, lobortis mauris. Aliquam suscipit, nulla at vehicula egestas, turpis mi vehicula neque, et mattis arcu leo quis massa. Aliquam sollicitudin malesuada placerat. Nam sollicitudin erat eget justo dictum pharetra. Ut purus massa, placerat at odio et, tristique porta augue. Integer quis convallis purus, vel auctor lacus..</p>
+            
+            <h2>Interaksi dengan image</h2>
+            <p>pengguna dapat meng-hover cursor mouse ke image-image yang ada. Pengguna akan diberi 2 pilihan button yaitu ‘Select’ dan ‘Hapus’. Sesuai dengan namanya, Select akan menyeleksi gambar tersebut dan dijadikan sebagai query gambar untuk CBIR. Button Hapus berfungsi untuk menghapus gambar yang pengguna pilih dari dataset. Tiap page, gambar diberi maksimal sebanyak 12 buah, dan dapat berganti-ganti page dari pagination di bawah segmen ini. Dengan menambahkan fungsionalitas Select dan Hapus pada gambar-gambar yang ditampilkan, pengguna dapat dengan mudah melakukan aksi yang diinginkan tanpa harus meninggalkan halaman. </p>
+            <h3>Select and Delete</h3>
+            <img src="{{ url_for('static', filename='gif2.gif') }}">
+            <h3>Similarity Check</h3>
+            <img src="{{ url_for('static', filename='gif1.gif') }}">
         </div>
-        <div class="how-to-use-3">
-            <p>Lorem ipsum dolor simi, tempus nec elit sed, aliquet pharetra erat. Ut malesuada eros turpis, a egestas libero semper eget. Praesent id nibh et orci venenatis vulputate ut ac sem. Praesent sodales quis ipsum vel condimentum. Nam mollis euismod lacus scelerisque porttitor. Sed a feugiat orci. Suspendisse at nibh vitae erat malesuada tristique. Aliquam eu porttitor elit. Nulla eleifend congue finibus. Duis sed erat lobortis, finibus quam at, imperdiet sapien. Duis ornare felis laoreet leo aliquam rutrum. Suspendisse ac neque id lacus posuere venenatis eu at nisi. Sed laoreet ligula sed molestie tincidunt. Phasellus eu nulla ornare, ultricies tellus quis, lobortis mauris. Aliquam suscipit, nulla at vehicula egestas, turpis mi vehicula neque, et mattis arcu leo quis massa. Aliquam sollicitudin malesuada placerat. Nam sollicitudin erat eget justo dictum pharetra. Ut purus massa, placerat at odio et, tristique porta augue. Integer quis convallis purus, vel auctor lacus..</p>
-        </div>
+    
+        
    
     </div>
-  
-
-    <footer class="footer">
+    <footer>
         <p>Lebih lanjut tentang kami &nbsp → &nbsp <a href='/about'>About Us</a>.</p>
     </footer>
+
+  
+    
 
 </body>
 
