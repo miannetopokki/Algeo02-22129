@@ -44,6 +44,9 @@ def about():
 
 @app.route('/use', methods=['GET', 'POST'])
 def use():
+    output_folder = os.path.join(app.config['FILTER_FOLDER'])
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
     
     if 'isScrape' not in session:  # Periksa apakah 'var' sudah ada di sesi
         session['isScrape'] = False
@@ -129,7 +132,10 @@ def use():
     action = request.form.get('action')
     if action == "SubmitLink":
         inputLink = request.form['inputLinkScrap']
-        scrape_images(inputLink)
+        if (inputLink != ''):
+            scrape_images(inputLink)
+        else:
+            session['messageunggah'] = "Input link kosong, tak bisa"
 
 
     #Status Scrap
